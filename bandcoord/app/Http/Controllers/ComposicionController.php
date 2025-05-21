@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Composicion;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\ImagesController;
 
 class ComposicionController extends Controller
 {
@@ -55,10 +57,49 @@ class ComposicionController extends Controller
                 'nombre' => 'required|string|max:255',
                 'descripcion' => 'required|string',
                 'nombre_autor' => 'required|string|max:255',
-                'ruta' => 'required|string|max:255',
+                'files' => 'required|array|max:12',
+                'iframe' => 'required|string|max:999',
             ]);
 
-            $composicion = Composicion::create($validated);
+            $imageController = new ImagesController();
+
+            $filesPath = [];
+            $uploadFailed = false;
+            $errorMessages = [];
+
+            foreach ($request->file('files') as $file) {
+                Log::info('Subiendo imagen...', ['file' => $file->getClientOriginalName()]);
+
+                $responseData = $imageController->uploadImage($file);
+
+                if (!$responseData['success']) {
+                    $uploadFailed = true;
+                    $errorMessages[] = 'No se pudo subir la imagen: ' . $file->getClientOriginalName();
+                    Log::error('Fallo al subir imagen.', ['imagen' => $file->getClientOriginalName()]);
+                } else {
+                    $filesPath[] = basename($responseData['path']);
+                    Log::info('Imagen subida exitosamente.', ['ruta' => $responseData['path']]);
+                }
+            }
+
+            if ($uploadFailed) {
+                Log::warning('Error en la subida de imágenes.', ['errores' => $errorMessages]);
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Algunas imágenes no se pudieron subir.',
+                    'errors' => $errorMessages
+                ], 400);
+            }
+
+            $composicion = new Composicion($validated);
+
+            $composicion->ruta = json_encode([
+                'youtube' => $request->input('iframe'),
+                'files' => array_map(fn($file) => $file, $filesPath)
+            ]);
+
+            $composicion->save(); // ahora sí, todos los campos están definidos
 
             return response()->json([
                 'message' => 'Composición creada correctamente.',
