@@ -21,7 +21,7 @@ class ImagesController extends Controller
 
         return [
             'success' => true,
-            'path' => asset('storage/' . $path)
+            'path' => asset( $path)
         ];
     }
 }
