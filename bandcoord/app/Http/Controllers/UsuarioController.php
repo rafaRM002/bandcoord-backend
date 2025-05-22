@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CorreoPersonalizado;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class UsuarioController extends Controller
@@ -177,6 +180,28 @@ class UsuarioController extends Controller
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al eliminar el usuario.', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function enviarCorreoPersonalizado(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'mensaje' => 'required|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Datos inválidos',
+                'messages' => $validator->errors()
+            ], 422);
+        }
+        try {
+            Mail::to($request->email)->send(new CorreoPersonalizado($request->mensaje));
+            return response()->json(['success' => 'Correo enviado correctamente con vista personalizada'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al enviar el correo', 'message' => $e->getMessage()], 500);
         }
     }
 }

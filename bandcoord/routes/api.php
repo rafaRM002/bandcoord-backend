@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 // RUTAS PÚBLICAS
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/mailTo', [UsuarioController::class, 'enviarCorreoPersonalizado']);;
 
 // RUTAS PROTEGIDAS
 Route::middleware('auth:sanctum')->group(function () {
