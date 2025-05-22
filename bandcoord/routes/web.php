@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+////Salida de emailpersonalizado para cambiar el diseño
+//Route::get('/email-preview', function () {
+//    $mensaje = 'Este es un mensaje de prueba para ver el estilo del correo.';
+//    return view('emailpersonalizado', compact('mensaje'));
+//});
