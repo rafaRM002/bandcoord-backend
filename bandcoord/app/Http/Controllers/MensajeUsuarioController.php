@@ -88,23 +88,29 @@ class MensajeUsuarioController extends Controller
                 'estado' => 'required|boolean',
             ]);
 
-            $mensajeUsuario = MensajeUsuario::where('mensaje_id', $mensaje_id)
+            $registro = DB::table('mensaje_usuario')
+                ->where('mensaje_id', $mensaje_id)
                 ->where('usuario_id_receptor', $usuario_id_receptor)
-                ->firstOrFail();
+                ->first();
 
-            $mensajeUsuario->estado = $validated['estado'];
-            $mensajeUsuario->save();
+            if (!$registro) {
+                return response()->json(['message' => 'No se encontró la relación.'], 404);
+            }
 
-            return response()->json([
-                'message' => 'Relación de mensaje de usuario actualizada exitosamente',
-                'data' => $mensajeUsuario
-            ]);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'Relación de mensaje de usuario no encontrada para actualizar.'], 404);
+            if ($registro->estado == $validated['estado']) {
+                return response()->json(['message' => 'El estado ya tiene ese valor. No se realizaron cambios.']);
+            }
+
+            DB::table('mensaje_usuario')
+                ->where('mensaje_id', $mensaje_id)
+                ->where('usuario_id_receptor', $usuario_id_receptor)
+                ->update(['estado' => $validated['estado']]);
+
+            return response()->json(['message' => 'Estado actualizado correctamente.']);
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la relación.', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al actualizar el estado.', 'message' => $e->getMessage()], 500);
         }
     }
 

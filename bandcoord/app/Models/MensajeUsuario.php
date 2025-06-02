@@ -10,6 +10,8 @@ class MensajeUsuario extends Model
     use HasFactory;
 
     protected $table = 'mensaje_usuario';
+    protected $casts = ['estado' => 'boolean'];
+    public $incrementing = false;
     protected $primaryKey = null;
     protected $fillable = [
         'mensaje_id',
