@@ -9,8 +9,7 @@
 
     <!-- Cabecera con logo -->
     <div style="background-color: #334155; padding: 20px 30px; display: flex; align-items: center;">
-        <img src="{{'logo.png'}}" alt="BandCoord Logo" style="height: 28px; margin-right: 12px;">
-        <h2 style="color: white; font-size: 22px; margin: 0;">Mensaje desde BandCoord</h2>
+        <h2 style="color: white; font-size: 22px; margin: 0;">📬 Mensaje desde BandCoord</h2>
     </div>
 
     <!-- Cuerpo -->
