@@ -92,7 +92,8 @@ class MensajeUsuarioController extends Controller
                 ->where('usuario_id_receptor', $usuario_id_receptor)
                 ->firstOrFail();
 
-            $mensajeUsuario->update($validated);
+            $mensajeUsuario->estado = $validated['estado'];
+            $mensajeUsuario->save();
 
             return response()->json([
                 'message' => 'Relación de mensaje de usuario actualizada exitosamente',

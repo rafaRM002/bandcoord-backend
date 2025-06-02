@@ -10,7 +10,7 @@ class MensajeUsuario extends Model
     use HasFactory;
 
     protected $table = 'mensaje_usuario';
-
+    protected $primaryKey = null;
     protected $fillable = [
         'mensaje_id',
         'usuario_id_receptor',
