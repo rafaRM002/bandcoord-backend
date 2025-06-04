@@ -100,10 +100,17 @@ class UsuarioController extends Controller
             ]);
 
             $usuario = Usuario::findOrFail($id);
+
+            // Guardamos y eliminamos la password del array validado
+            $password = $validated['password'] ?? null;
+            unset($validated['password']);
+
+            // Rellenamos el resto de atributos
             $usuario->fill($validated);
 
-            if ($request->has('password')) {
-                $usuario->password = bcrypt($validated['password']);
+            // Solo si se proporciona una nueva contraseña, se actualiza
+            if (!empty($password)) {
+                $usuario->password = bcrypt($password);
             }
 
             $usuario->save();
