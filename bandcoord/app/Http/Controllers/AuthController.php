@@ -20,6 +20,7 @@ class AuthController extends Controller
                 'email' => 'required|string|email|max:255|unique:usuarios,email',
                 'telefono' => 'nullable|string|max:15',
                 'password' => 'required|string|min:8',
+                'fecha_nac' =>'nullable|date',
             ]);
 
             if ($validator->fails()) {
@@ -35,6 +36,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'estado' => 'pendiente',
                 'fecha_entrada' => now(),
+                'fecha_nac'=>$request->fecha_nac,
                 'role' => 'miembro',
             ]);
 
