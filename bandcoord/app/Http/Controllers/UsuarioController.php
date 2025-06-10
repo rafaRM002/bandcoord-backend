@@ -10,9 +10,40 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Gestión de Usuarios
+ *
+ * APIs para gestionar usuarios en el sistema
+ */
 class UsuarioController extends Controller
 {
-    // Listar todos los usuarios
+    /**
+     * Listar usuarios
+     *
+     * Obtiene una lista de todos los usuarios registrados en el sistema.
+     *
+     * @response 200 {
+     *  "message": "Usuarios obtenidos correctamente.",
+     *  "data": [
+     *    {
+     *      "id": 1,
+     *      "nombre": "Juan",
+     *      "apellido1": "Pérez",
+     *      "apellido2": "García",
+     *      "telefono": "123456789",
+     *      "email": "juan@ejemplo.com",
+     *      "estado": "activo",
+     *      "fecha_nac": "1990-01-01",
+     *      "fecha_entrada": "2023-01-01",
+     *      "role": "miembro"
+     *    }
+     *  ]
+     * }
+     * @response 500 {
+     *  "error": "Error al obtener los usuarios.",
+     *  "message": "Mensaje de error específico"
+     * }
+     */
     public function index()
     {
         try {
@@ -26,7 +57,33 @@ class UsuarioController extends Controller
         }
     }
 
-    // Obtener un usuario específico
+    /**
+     * Mostrar usuario
+     *
+     * Muestra la información de un usuario específico.
+     *
+     * @urlParam id required El ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Usuario obtenido correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "nombre": "Juan",
+     *    "apellido1": "Pérez",
+     *    "apellido2": "García",
+     *    "telefono": "123456789",
+     *    "email": "juan@ejemplo.com",
+     *    "estado": "activo",
+     *    "fecha_nac": "1990-01-01",
+     *    "fecha_entrada": "2023-01-01",
+     *    "role": "miembro"
+     *  }
+     * }
+     * @response 404 {
+     *  "error": "Usuario no encontrado.",
+     *  "message": "Mensaje de error específico"
+     * }
+     */
     public function show($id)
     {
         try {
@@ -40,7 +97,44 @@ class UsuarioController extends Controller
         }
     }
 
-    // Crear un nuevo usuario
+    /**
+     * Crear usuario
+     *
+     * Crea un nuevo usuario en el sistema.
+     *
+     * @bodyParam nombre string required Nombre del usuario. Example: Juan
+     * @bodyParam apellido1 string required Primer apellido del usuario. Example: Pérez
+     * @bodyParam apellido2 string Segundo apellido del usuario. Example: García
+     * @bodyParam telefono string Número de teléfono del usuario. Example: 123456789
+     * @bodyParam email string required Email del usuario. Example: juan@ejemplo.com
+     * @bodyParam password string required Contraseña del usuario (mínimo 6 caracteres). Example: password123
+     * @bodyParam password_confirmation string required Confirmación de la contraseña. Example: password123
+     * @bodyParam estado string required Estado del usuario (activo/suspendido/bloqueado). Example: activo
+     * @bodyParam fecha_nac date required Fecha de nacimiento. Example: 1990-01-01
+     * @bodyParam fecha_entrada date required Fecha de entrada. Example: 2023-01-01
+     * @bodyParam role string required Rol del usuario (admin/miembro). Example: miembro
+     *
+     * @response 201 {
+     *  "message": "Usuario creado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "nombre": "Juan",
+     *    "apellido1": "Pérez",
+     *    "apellido2": "García",
+     *    "telefono": "123456789",
+     *    "email": "juan@ejemplo.com",
+     *    "estado": "activo",
+     *    "fecha_nac": "1990-01-01",
+     *    "fecha_entrada": "2023-01-01",
+     *    "role": "miembro"
+     *  }
+     * }
+     * @response 422 {
+     *  "error": {
+     *    "email": ["El correo electrónico ya está en uso."]
+     *  }
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -82,7 +176,40 @@ class UsuarioController extends Controller
         }
     }
 
-    // Actualizar un usuario existente
+    /**
+     * Actualizar usuario
+     *
+     * Actualiza la información de un usuario existente.
+     *
+     * @urlParam id required El ID del usuario. Example: 1
+     * @bodyParam nombre string Nombre del usuario. Example: Juan
+     * @bodyParam apellido1 string Primer apellido del usuario. Example: Pérez
+     * @bodyParam apellido2 string Segundo apellido del usuario. Example: García
+     * @bodyParam telefono string Número de teléfono del usuario. Example: 123456789
+     * @bodyParam email string Email del usuario. Example: juan@ejemplo.com
+     * @bodyParam password string Contraseña del usuario (mínimo 6 caracteres). Example: newpassword123
+     * @bodyParam password_confirmation string Confirmación de la contraseña. Example: newpassword123
+     * @bodyParam estado string Estado del usuario (activo/suspendido/bloqueado). Example: activo
+     * @bodyParam fecha_nac date Fecha de nacimiento. Example: 1990-01-01
+     * @bodyParam fecha_entrada date Fecha de entrada. Example: 2023-01-01
+     * @bodyParam role string Rol del usuario (admin/miembro). Example: miembro
+     *
+     * @response 200 {
+     *  "message": "Usuario actualizado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "nombre": "Juan",
+     *    "apellido1": "Pérez",
+     *    "apellido2": "García",
+     *    "telefono": "123456789",
+     *    "email": "juan@ejemplo.com",
+     *    "estado": "activo",
+     *    "fecha_nac": "1990-01-01",
+     *    "fecha_entrada": "2023-01-01",
+     *    "role": "miembro"
+     *  }
+     * }
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -126,7 +253,24 @@ class UsuarioController extends Controller
         }
     }
 
-    // Aprobar un usuario
+    /**
+     * Aprobar usuario
+     *
+     * Cambia el estado de un usuario a 'activo'.
+     *
+     * @urlParam id required El ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Usuario aprobado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "estado": "activo"
+     *  }
+     * }
+     * @response 404 {
+     *  "error": "Usuario no encontrado."
+     * }
+     */
     public function approveUser($id)
     {
         try {
@@ -148,7 +292,24 @@ class UsuarioController extends Controller
         }
     }
 
-    // Bloquear un usuario
+    /**
+     * Bloquear usuario
+     *
+     * Cambia el estado de un usuario a 'bloqueado'.
+     *
+     * @urlParam id required El ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Usuario bloqueado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "estado": "bloqueado"
+     *  }
+     * }
+     * @response 400 {
+     *  "error": "Este usuario ya está bloqueado."
+     * }
+     */
     public function blockUser($id)
     {
         try {
@@ -174,7 +335,23 @@ class UsuarioController extends Controller
         }
     }
 
-    // Eliminar un usuario
+    /**
+     * Eliminar usuario
+     *
+     * Elimina un usuario del sistema.
+     *
+     * @urlParam id required El ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Usuario eliminado correctamente.",
+     *  "data": {
+     *    "id": 1
+     *  }
+     * }
+     * @response 404 {
+     *  "error": "Usuario no encontrado."
+     * }
+     */
     public function destroy($id)
     {
         try {
@@ -190,6 +367,25 @@ class UsuarioController extends Controller
         }
     }
 
+    /**
+     * Enviar correo personalizado
+     *
+     * Envía un correo electrónico personalizado a un usuario.
+     *
+     * @bodyParam email string required Email del destinatario. Example: usuario@ejemplo.com
+     * @bodyParam mensaje string required Contenido del mensaje (máximo 1000 caracteres). Example: Este es un mensaje personalizado.
+     *
+     * @response 200 {
+     *  "success": "Correo enviado correctamente con vista personalizada"
+     * }
+     * @response 422 {
+     *  "error": "Datos inválidos",
+     *  "messages": {
+     *    "email": ["El campo email es obligatorio."],
+     *    "mensaje": ["El campo mensaje es obligatorio."]
+     *  }
+     * }
+     */
     public function enviarCorreoPersonalizado(Request $request)
     {
         $validator = Validator::make($request->all(), [

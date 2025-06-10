@@ -6,9 +6,38 @@ use App\Models\Evento;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * @group Gestión de Eventos
+ *
+ * APIs para gestionar eventos musicales
+ */
 class EventoController extends Controller
 {
-    // Listar todos los eventos
+    /**
+     * Listar todos los eventos
+     *
+     * Obtiene una lista de todos los eventos registrados en el sistema.
+     *
+     * @response 200 {
+     *    "message": "Eventos obtenidos correctamente.",
+     *    "eventos": [
+     *      {
+     *        "id": 1,
+     *        "nombre": "Ensayo General",
+     *        "fecha": "2025-06-15",
+     *        "lugar": "Sala de Ensayos Principal",
+     *        "hora": "19:00",
+     *        "estado": "planificado",
+     *        "tipo": "ensayo",
+     *        "entidad_id": 1
+     *      }
+     *    ]
+     * }
+     * @response 500 {
+     *    "error": "Hubo un problema al obtener los eventos.",
+     *    "message": "Error message here"
+     * }
+     */
     public function index()
     {
         try {
@@ -25,7 +54,31 @@ class EventoController extends Controller
         }
     }
 
-    // Obtener un evento
+    /**
+     * Obtener un evento específico
+     *
+     * Muestra la información detallada de un evento específico.
+     *
+     * @urlParam id required El ID del evento. Example: 1
+     *
+     * @response 200 {
+     *    "message": "Evento obtenido correctamente.",
+     *    "evento": {
+     *      "id": 1,
+     *      "nombre": "Ensayo General",
+     *      "fecha": "2025-06-15",
+     *      "lugar": "Sala de Ensayos Principal",
+     *      "hora": "19:00",
+     *      "estado": "planificado",
+     *      "tipo": "ensayo",
+     *      "entidad_id": 1
+     *    }
+     * }
+     * @response 404 {
+     *    "error": "Evento no encontrado.",
+     *    "message": "El evento con el ID 1 no existe."
+     * }
+     */
     public function show($id)
     {
         try {
@@ -47,7 +100,39 @@ class EventoController extends Controller
         }
     }
 
-    // Crear un nuevo evento
+    /**
+     * Crear un nuevo evento
+     *
+     * Crea un nuevo evento con los datos proporcionados.
+     *
+     * @bodyParam nombre string required Nombre del evento. Example: Ensayo General
+     * @bodyParam fecha date required Fecha del evento (Y-m-d). Example: 2025-06-15
+     * @bodyParam lugar string required Lugar donde se realizará el evento. Example: Sala de Ensayos Principal
+     * @bodyParam hora string required Hora del evento (H:i). Example: 19:00
+     * @bodyParam estado string required Estado del evento (planificado, en progreso, finalizado). Example: planificado
+     * @bodyParam tipo string required Tipo de evento (ensayo, procesion, concierto, pasacalles). Example: ensayo
+     * @bodyParam entidad_id integer required ID de la entidad asociada. Example: 1
+     *
+     * @response 200 {
+     *    "message": "Evento creado correctamente.",
+     *    "evento": {
+     *      "id": 1,
+     *      "nombre": "Ensayo General",
+     *      "fecha": "2025-06-15",
+     *      "lugar": "Sala de Ensayos Principal",
+     *      "hora": "19:00",
+     *      "estado": "planificado",
+     *      "tipo": "ensayo",
+     *      "entidad_id": 1
+     *    }
+     * }
+     * @response 422 {
+     *    "message": "The given data was invalid.",
+     *    "errors": {
+     *      "nombre": ["El campo nombre es obligatorio."]
+     *    }
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -77,7 +162,38 @@ class EventoController extends Controller
         }
     }
 
-    // Actualizar un evento existente
+    /**
+     * Actualizar un evento
+     *
+     * Actualiza la información de un evento existente.
+     *
+     * @urlParam id required El ID del evento. Example: 1
+     * @bodyParam nombre string Nombre del evento. Example: Ensayo General Actualizado
+     * @bodyParam fecha date Fecha del evento (Y-m-d). Example: 2025-06-16
+     * @bodyParam lugar string Lugar donde se realizará el evento. Example: Sala de Ensayos Secundaria
+     * @bodyParam hora string Hora del evento (H:i). Example: 20:00
+     * @bodyParam estado string Estado del evento (planificado, en progreso, finalizado). Example: en progreso
+     * @bodyParam tipo string Tipo de evento (ensayo, procesion, concierto, pasacalles). Example: ensayo
+     * @bodyParam entidad_id integer ID de la entidad asociada. Example: 1
+     *
+     * @response 200 {
+     *    "message": "Evento actualizado correctamente.",
+     *    "evento": {
+     *      "id": 1,
+     *      "nombre": "Ensayo General Actualizado",
+     *      "fecha": "2025-06-16",
+     *      "lugar": "Sala de Ensayos Secundaria",
+     *      "hora": "20:00",
+     *      "estado": "en progreso",
+     *      "tipo": "ensayo",
+     *      "entidad_id": 1
+     *    }
+     * }
+     * @response 404 {
+     *    "error": "Evento no encontrado.",
+     *    "message": "El evento con el ID 1 no existe."
+     * }
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -115,7 +231,21 @@ class EventoController extends Controller
         }
     }
 
-    // Eliminar un evento
+    /**
+     * Eliminar un evento
+     *
+     * Elimina un evento específico del sistema.
+     *
+     * @urlParam id required El ID del evento a eliminar. Example: 1
+     *
+     * @response 200 {
+     *    "message": "Evento eliminado correctamente."
+     * }
+     * @response 404 {
+     *    "error": "Evento no encontrado.",
+     *    "message": "El evento con el ID 1 no existe."
+     * }
+     */
     public function destroy($id)
     {
         try {

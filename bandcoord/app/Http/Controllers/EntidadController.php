@@ -6,9 +6,38 @@ use App\Models\Entidad;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * @group Gestión de Entidades
+ *
+ * APIs para gestionar entidades en el sistema
+ */
 class EntidadController extends Controller
 {
-    // Listar todas las entidades
+    /**
+     * Listar entidades
+     *
+     * Obtiene una lista de todas las entidades registradas en el sistema.
+     *
+     * @response 200 {
+     *     "message": "Lista de entidades obtenida correctamente.",
+     *     "data": [
+     *         {
+     *             "id": 1,
+     *             "nombre": "Hermandad Example",
+     *             "tipo": "hermandad",
+     *             "persona_contacto": "Juan Pérez",
+     *             "telefono": "123456789",
+     *             "email_contacto": "contacto@hermandad.com",
+     *             "created_at": "2025-06-10T12:00:00.000000Z",
+     *             "updated_at": "2025-06-10T12:00:00.000000Z"
+     *         }
+     *     ]
+     * }
+     * @response 500 {
+     *     "error": "Error al obtener las entidades.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function index()
     {
         try {
@@ -25,7 +54,34 @@ class EntidadController extends Controller
         }
     }
 
-    // Obtener una entidad
+    /**
+     * Obtener entidad específica
+     *
+     * Recupera la información de una entidad específica por su ID.
+     *
+     * @urlParam id required El ID de la entidad. Example: 1
+     *
+     * @response 200 {
+     *     "message": "Entidad encontrada correctamente.",
+     *     "data": {
+     *         "id": 1,
+     *         "nombre": "Hermandad Example",
+     *         "tipo": "hermandad",
+     *         "persona_contacto": "Juan Pérez",
+     *         "telefono": "123456789",
+     *         "email_contacto": "contacto@hermandad.com",
+     *         "created_at": "2025-06-10T12:00:00.000000Z",
+     *         "updated_at": "2025-06-10T12:00:00.000000Z"
+     *     }
+     * }
+     * @response 404 {
+     *     "error": "Entidad no encontrada."
+     * }
+     * @response 500 {
+     *     "error": "Error al obtener la entidad.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function show($id)
     {
         try {
@@ -47,7 +103,42 @@ class EntidadController extends Controller
         }
     }
 
-    // Crear una nueva entidad
+    /**
+     * Crear entidad
+     *
+     * Crea una nueva entidad con los datos proporcionados.
+     *
+     * @bodyParam nombre string required Nombre de la entidad. Example: Hermandad Example
+     * @bodyParam tipo string required Tipo de entidad (hermandad/ayuntamiento/otro). Example: hermandad
+     * @bodyParam persona_contacto string required Nombre de la persona de contacto. Example: Juan Pérez
+     * @bodyParam telefono string required Número de teléfono de contacto. Example: 123456789
+     * @bodyParam email_contacto string required Email de contacto. Example: contacto@hermandad.com
+     *
+     * @response 201 {
+     *     "message": "Entidad creada correctamente.",
+     *     "data": {
+     *         "id": 1,
+     *         "nombre": "Hermandad Example",
+     *         "tipo": "hermandad",
+     *         "persona_contacto": "Juan Pérez",
+     *         "telefono": "123456789",
+     *         "email_contacto": "contacto@hermandad.com",
+     *         "created_at": "2025-06-10T12:00:00.000000Z",
+     *         "updated_at": "2025-06-10T12:00:00.000000Z"
+     *     }
+     * }
+     * @response 422 {
+     *     "message": "The given data was invalid.",
+     *     "errors": {
+     *         "nombre": ["El campo nombre es obligatorio."],
+     *         "tipo": ["El campo tipo debe ser hermandad, ayuntamiento u otro."]
+     *     }
+     * }
+     * @response 500 {
+     *     "error": "Error al crear la entidad.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -73,7 +164,45 @@ class EntidadController extends Controller
         }
     }
 
-    // Actualizar una entidad existente
+    /**
+     * Actualizar entidad
+     *
+     * Actualiza la información de una entidad existente.
+     *
+     * @urlParam id required El ID de la entidad a actualizar. Example: 1
+     * @bodyParam nombre string Nombre de la entidad. Example: Hermandad Example
+     * @bodyParam tipo string Tipo de entidad (hermandad/ayuntamiento/otro). Example: hermandad
+     * @bodyParam persona_contacto string Nombre de la persona de contacto. Example: Juan Pérez
+     * @bodyParam telefono string Número de teléfono de contacto. Example: 123456789
+     * @bodyParam email_contacto string Email de contacto. Example: contacto@hermandad.com
+     *
+     * @response {
+     *     "message": "Entidad actualizada correctamente.",
+     *     "data": {
+     *         "id": 1,
+     *         "nombre": "Hermandad Example",
+     *         "tipo": "hermandad",
+     *         "persona_contacto": "Juan Pérez",
+     *         "telefono": "123456789",
+     *         "email_contacto": "contacto@hermandad.com",
+     *         "created_at": "2025-06-10T12:00:00.000000Z",
+     *         "updated_at": "2025-06-10T12:00:00.000000Z"
+     *     }
+     * }
+     * @response 404 {
+     *     "error": "Entidad no encontrada."
+     * }
+     * @response 422 {
+     *     "message": "The given data was invalid.",
+     *     "errors": {
+     *         "tipo": ["El campo tipo debe ser hermandad, ayuntamiento u otro."]
+     *     }
+     * }
+     * @response 500 {
+     *     "error": "Error al actualizar la entidad.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -103,7 +232,24 @@ class EntidadController extends Controller
         }
     }
 
-    // Eliminar una entidad
+    /**
+     * Eliminar entidad
+     *
+     * Elimina una entidad específica del sistema.
+     *
+     * @urlParam id required El ID de la entidad a eliminar. Example: 1
+     *
+     * @response {
+     *     "message": "Entidad eliminada correctamente."
+     * }
+     * @response 404 {
+     *     "error": "Entidad no encontrada."
+     * }
+     * @response 500 {
+     *     "error": "Error al eliminar la entidad.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function destroy($id)
     {
         try {

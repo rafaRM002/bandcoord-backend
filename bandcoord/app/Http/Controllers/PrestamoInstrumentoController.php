@@ -9,9 +9,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Gestión de Préstamos de Instrumentos
+ *
+ * APIs para gestionar los préstamos de instrumentos
+ */
 class PrestamoInstrumentoController extends Controller
 {
-    // Listar todos los préstamos de instrumentos
+    /**
+     * Listar préstamos
+     *
+     * Obtiene una lista de todos los préstamos de instrumentos con sus relaciones.
+     *
+     * @response 200 {
+     *   "message": "Listado de préstamos obtenido correctamente.",
+     *   "data": [
+     *     {
+     *       "num_serie": "123ABC",
+     *       "usuario_id": 1,
+     *       "fecha_prestamo": "2025-06-10",
+     *       "fecha_devolucion": null,
+     *       "instrumento": {
+     *         "numero_serie": "123ABC",
+     *         "nombre": "Guitarra Eléctrica",
+     *         "estado": "prestado"
+     *       },
+     *       "usuario": {
+     *         "id": 1,
+     *         "nombre": "Juan Pérez"
+     *       }
+     *     }
+     *   ]
+     * }
+     * @response 500 {
+     *   "error": "Error al obtener los préstamos.",
+     *   "message": "Mensaje de error específico"
+     * }
+     */
     public function index()
     {
         try {
@@ -28,7 +62,38 @@ class PrestamoInstrumentoController extends Controller
         }
     }
 
-    // Obtener un préstamo específico
+    /**
+     * Mostrar préstamo específico
+     *
+     * Obtiene los detalles de un préstamo específico por número de serie y ID de usuario.
+     *
+     * @urlParam num_serie string required El número de serie del instrumento. Example: 123ABC
+     * @urlParam usuario_id integer required El ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *   "message": "Préstamo obtenido correctamente.",
+     *   "data": {
+     *     "num_serie": "123ABC",
+     *     "usuario_id": 1,
+     *     "fecha_prestamo": "2025-06-10",
+     *     "fecha_devolucion": null,
+     *     "instrumento": {
+     *       "numero_serie": "123ABC",
+     *       "nombre": "Guitarra Eléctrica",
+     *       "estado": "prestado"
+     *     },
+     *     "usuario": {
+     *       "id": 1,
+     *       "nombre": "Juan Pérez"
+     *     }
+     *   }
+     * }
+     * @response 404 {"error": "Préstamo no encontrado."}
+     * @response 500 {
+     *   "error": "Error al obtener el préstamo.",
+     *   "message": "Mensaje de error específico"
+     * }
+     */
     public function show($num_serie, $usuario_id)
     {
         try {
@@ -48,7 +113,30 @@ class PrestamoInstrumentoController extends Controller
         }
     }
 
-    // Crear un nuevo préstamo de instrumento
+    /**
+     * Crear préstamo
+     *
+     * Crea un nuevo préstamo de instrumento y actualiza el estado del instrumento.
+     *
+     * @bodyParam num_serie string required Número de serie del instrumento. Example: 123ABC
+     * @bodyParam usuario_id integer required ID del usuario que solicita el préstamo. Example: 1
+     * @bodyParam fecha_prestamo date required Fecha del préstamo. Example: 2025-06-10
+     * @bodyParam fecha_devolucion date opcional Fecha de devolución programada. Example: 2025-06-17
+     *
+     * @response 201 {
+     *   "message": "Préstamo creado correctamente.",
+     *   "data": {
+     *     "num_serie": "123ABC",
+     *     "usuario_id": 1,
+     *     "fecha_prestamo": "2025-06-10",
+     *     "fecha_devolucion": null
+     *   }
+     * }
+     * @response 400 {"error": "El instrumento no está disponible para préstamo."}
+     * @response 400 {"error": "Este usuario ya tiene un préstamo activo para este instrumento."}
+     * @response 404 {"error": "Instrumento no encontrado."}
+     * @response 422 {"error": {"num_serie": ["El número de serie es obligatorio."]}}
+     */
     public function store(Request $request)
     {
         try {
@@ -108,7 +196,28 @@ class PrestamoInstrumentoController extends Controller
         }
     }
 
-    // Actualizar un préstamo de instrumento
+    /**
+     * Actualizar préstamo
+     *
+     * Actualiza las fechas de un préstamo existente.
+     *
+     * @urlParam num_serie string required Número de serie del instrumento. Example: 123ABC
+     * @urlParam usuario_id integer required ID del usuario. Example: 1
+     * @bodyParam fecha_prestamo date required Nueva fecha de préstamo. Example: 2025-06-10
+     * @bodyParam fecha_devolucion date required Nueva fecha de devolución. Example: 2025-06-17
+     *
+     * @response {
+     *   "message": "Préstamo actualizado correctamente."
+     * }
+     * @response 404 {
+     *   "message": "No se encontró el préstamo para actualizar."
+     * }
+     * @response 422 {
+     *   "error": {
+     *     "fecha_prestamo": ["La fecha de préstamo es obligatoria."]
+     *   }
+     * }
+     */
     public function update(Request $request, $num_serie, $usuario_id)
     {
         try {
@@ -151,7 +260,25 @@ class PrestamoInstrumentoController extends Controller
         }
     }
 
-    // Eliminar un préstamo de instrumento
+    /**
+     * Eliminar préstamo
+     *
+     * Elimina un préstamo existente.
+     *
+     * @urlParam num_serie string required Número de serie del instrumento. Example: 123ABC
+     * @urlParam usuario_id integer required ID del usuario. Example: 1
+     *
+     * @response {
+     *   "message": "Préstamo eliminado correctamente."
+     * }
+     * @response 404 {
+     *   "error": "Préstamo no encontrado para eliminar."
+     * }
+     * @response 500 {
+     *   "error": "Error al eliminar el préstamo.",
+     *   "message": "Mensaje de error específico"
+     * }
+     */
     public function destroy($num_serie, $usuario_id)
     {
         try {

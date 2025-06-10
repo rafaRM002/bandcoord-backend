@@ -7,9 +7,40 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * @group Gestión de Mensajes
+ *
+ * APIs para gestionar mensajes en el sistema
+ */
 class MensajeController extends Controller
 {
-    // Listar todos los mensajes
+    /**
+     * Listar mensajes
+     *
+     * Obtiene una lista de todos los mensajes con información del emisor.
+     *
+     * @response 200 {
+     *  "message": "Mensajes obtenidos correctamente.",
+     *  "data": [
+     *    {
+     *      "id": 1,
+     *      "asunto": "Ejemplo de asunto",
+     *      "contenido": "Contenido del mensaje",
+     *      "usuario_id_emisor": 1,
+     *      "created_at": "2025-06-10T12:00:00Z",
+     *      "updated_at": "2025-06-10T12:00:00Z",
+     *      "emisor": {
+     *        "id": 1,
+     *        "nombre": "Usuario Ejemplo"
+     *      }
+     *    }
+     *  ]
+     * }
+     * @response 500 {
+     *  "error": "Error al obtener los mensajes.",
+     *  "message": "Mensaje de error detallado"
+     * }
+     */
     public function index()
     {
         try {
@@ -27,7 +58,36 @@ class MensajeController extends Controller
         }
     }
 
-    // Obtener un mensaje
+    /**
+     * Obtener mensaje específico
+     *
+     * Obtiene la información detallada de un mensaje específico.
+     *
+     * @urlParam id required El ID del mensaje. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Mensaje obtenido correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "asunto": "Ejemplo de asunto",
+     *    "contenido": "Contenido del mensaje",
+     *    "usuario_id_emisor": 1,
+     *    "created_at": "2025-06-10T12:00:00Z",
+     *    "updated_at": "2025-06-10T12:00:00Z",
+     *    "emisor": {
+     *      "id": 1,
+     *      "nombre": "Usuario Ejemplo"
+     *    }
+     *  }
+     * }
+     * @response 404 {
+     *  "error": "Mensaje no encontrado."
+     * }
+     * @response 500 {
+     *  "error": "Error al obtener el mensaje.",
+     *  "message": "Mensaje de error detallado"
+     * }
+     */
     public function show($id)
     {
         try {
@@ -49,7 +109,34 @@ class MensajeController extends Controller
         }
     }
 
-    // Crear un nuevo mensaje
+    /**
+     * Crear mensaje
+     *
+     * Crea un nuevo mensaje en el sistema.
+     *
+     * @bodyParam asunto string required El asunto del mensaje. Example: Reunión importante
+     * @bodyParam contenido string required El contenido del mensaje. Example: Contenido detallado del mensaje
+     * @bodyParam usuario_id_emisor integer required El ID del usuario que envía el mensaje. Example: 1
+     *
+     * @response 201 {
+     *  "message": "Mensaje creado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "asunto": "Reunión importante",
+     *    "contenido": "Contenido detallado del mensaje",
+     *    "usuario_id_emisor": 1,
+     *    "created_at": "2025-06-10T12:00:00Z",
+     *    "updated_at": "2025-06-10T12:00:00Z"
+     *  }
+     * }
+     * @response 422 {
+     *  "error": {
+     *    "asunto": ["El campo asunto es obligatorio."],
+     *    "contenido": ["El campo contenido es obligatorio."],
+     *    "usuario_id_emisor": ["El usuario especificado no existe."]
+     *  }
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -77,7 +164,36 @@ class MensajeController extends Controller
         }
     }
 
-    // Actualizar un mensaje existente
+    /**
+     * Actualizar mensaje
+     *
+     * Actualiza la información de un mensaje existente.
+     *
+     * @urlParam id required El ID del mensaje a actualizar. Example: 1
+     * @bodyParam asunto string El asunto del mensaje. Example: Reunión actualizada
+     * @bodyParam contenido string El contenido del mensaje. Example: Contenido actualizado del mensaje
+     * @bodyParam usuario_id_emisor integer El ID del usuario que envía el mensaje. Example: 1
+     *
+     * @response {
+     *  "message": "Mensaje actualizado correctamente.",
+     *  "data": {
+     *    "id": 1,
+     *    "asunto": "Reunión actualizada",
+     *    "contenido": "Contenido actualizado del mensaje",
+     *    "usuario_id_emisor": 1,
+     *    "created_at": "2025-06-10T12:00:00Z",
+     *    "updated_at": "2025-06-10T12:00:00Z"
+     *  }
+     * }
+     * @response 404 {
+     *  "error": "Mensaje no encontrado."
+     * }
+     * @response 422 {
+     *  "error": {
+     *    "asunto": ["El campo asunto no puede exceder los 255 caracteres."]
+     *  }
+     * }
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -104,7 +220,24 @@ class MensajeController extends Controller
         }
     }
 
-    // Eliminar un mensaje
+    /**
+     * Eliminar mensaje
+     *
+     * Elimina un mensaje específico del sistema.
+     *
+     * @urlParam id required El ID del mensaje a eliminar. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Mensaje eliminado correctamente."
+     * }
+     * @response 404 {
+     *  "error": "Mensaje no encontrado."
+     * }
+     * @response 500 {
+     *  "error": "Error al eliminar el mensaje.",
+     *  "message": "Mensaje de error detallado"
+     * }
+     */
     public function destroy($id)
     {
         try {

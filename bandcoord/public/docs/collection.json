@@ -1,0 +1,3416 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "https:\/\/www.iestrassierra.net\/alumnado\/curso2425\/DAW\/daw2425a16\/laravel"
+        }
+    ],
+    "info": {
+        "name": "BandCoord API Documentation",
+        "_postman_id": "5f047b62-0958-4e0b-85f2-14a7a3523155",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Gesti\u00f3n de Autenticaci\u00f3n",
+            "description": "\nAPIs para gestionar la autenticaci\u00f3n de usuarios, registro y gesti\u00f3n de perfiles",
+            "item": [
+                {
+                    "name": "Registrar nuevo usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Juan\",\"apellido1\":\"Garc\u00eda\",\"apellido2\":\"L\u00f3pez\",\"email\":\"juan.garcia@ejemplo.com\",\"telefono\":\"612345678\",\"password\":\"password123\",\"fecha_nac\":\"1990-01-01\"}"
+                        },
+                        "description": "Registra un nuevo usuario en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Usuario registrado correctamente. Esperando aprobaci\u00f3n del administrador.\",\n    \"usuario\": {\n        \"nombre\": \"Juan\",\n        \"apellido1\": \"Garc\u00eda\",\n        \"email\": \"juan.garcia@ejemplo.com\",\n        \"estado\": \"pendiente\",\n        \"role\": \"miembro\",\n        \"updated_at\": \"2025-06-10T12:00:00.000000Z\",\n        \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n        \"id\": 1\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"errors\": {\n        \"email\": [\"El correo electr\u00f3nico ya est\u00e1 en uso.\"],\n        \"password\": [\"La contrase\u00f1a debe tener al menos 8 caracteres.\"]\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Iniciar sesi\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"juan.garcia@ejemplo.com\",\"password\":\"password123\"}"
+                        },
+                        "description": "Autentifica al usuario y devuelve un token de acceso.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"token\": \"1|abcdef123456...\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"message\": \"Las credenciales son incorrectas.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n    \"message\": \"Tu cuenta est\u00e1 pendiente de aprobaci\u00f3n por un administrador.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"El usuario no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Cerrar sesi\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Cierra la sesi\u00f3n del usuario actual invalidando el token."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Sesi\u00f3n cerrada correctamente\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Composiciones",
+            "description": "\nAPIs para administrar composiciones musicales",
+            "item": [
+                {
+                    "name": "Listar composiciones",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composiciones",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composiciones"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todas las composiciones disponibles.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Lista de composiciones obtenida correctamente.\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"nombre\": \"Sinfon\u00eda No. 5\",\n      \"descripcion\": \"Obra maestra de Beethoven\",\n      \"nombre_autor\": \"Ludwig van Beethoven\",\n      \"ruta\": {\n        \"youtube\": \"https:\/\/www.youtube.com\/embed\/abc123\",\n        \"files\": [\"imagen1.jpg\", \"partitura.pdf\"]\n      },\n      \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n      \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"error\": \"Hubo un problema al obtener las composiciones.\",\n  \"message\": \"Error mensaje\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear composici\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composiciones",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composiciones"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Sinfon\u00eda No. 5\",\"descripcion\":\"Obra maestra de Beethoven\",\"nombre_autor\":\"Ludwig van Beethoven\",\"files\":[\"architecto\"],\"iframe\":\"https:\\\/\\\/www.youtube.com\\\/embed\\\/abc123\"}"
+                        },
+                        "description": "Crea una nueva composici\u00f3n con los datos proporcionados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Composici\u00f3n creada correctamente.\",\n  \"data\": {\n    \"id\": 1,\n    \"nombre\": \"Sinfon\u00eda No. 5\",\n    \"descripcion\": \"Obra maestra de Beethoven\",\n    \"nombre_autor\": \"Ludwig van Beethoven\",\n    \"ruta\": {\n      \"youtube\": \"https:\/\/www.youtube.com\/embed\/abc123\",\n      \"files\": [\"imagen1.jpg\", \"partitura.pdf\"]\n    },\n    \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n    \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Algunas im\u00e1genes no se pudieron subir.\",\n  \"errors\": [\"No se pudo subir la imagen: imagen1.jpg\"]\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mostrar composici\u00f3n espec\u00edfica",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composiciones\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composiciones\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la composici\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene los detalles de una composici\u00f3n espec\u00edfica por su ID.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Composici\u00f3n encontrada correctamente.\",\n  \"data\": {\n    \"id\": 1,\n    \"nombre\": \"Sinfon\u00eda No. 5\",\n    \"descripcion\": \"Obra maestra de Beethoven\",\n    \"nombre_autor\": \"Ludwig van Beethoven\",\n    \"ruta\": {\n      \"youtube\": \"https:\/\/www.youtube.com\/embed\/abc123\",\n      \"files\": [\"imagen1.jpg\", \"partitura.pdf\"]\n    },\n    \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n    \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Composici\u00f3n no encontrada.\",\n  \"message\": \"La composici\u00f3n con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar composici\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composiciones\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composiciones\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la composici\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Sinfon\u00eda No. 5\",\"descripcion\":\"Obra maestra de Beethoven\",\"nombre_autor\":\"Ludwig van Beethoven\",\"iframe\":\"https:\\\/\\\/www.youtube.com\\\/embed\\\/abc123\",\"files\":[\"architecto\"],\"files_existentes\":\"architecto\"}"
+                        },
+                        "description": "Actualiza los datos de una composici\u00f3n existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Composici\u00f3n actualizada correctamente.\",\n  \"data\": {\n    \"id\": 1,\n    \"nombre\": \"Sinfon\u00eda No. 5\",\n    \"descripcion\": \"Obra maestra de Beethoven actualizada\",\n    \"nombre_autor\": \"Ludwig van Beethoven\",\n    \"ruta\": {\n      \"youtube\": \"https:\/\/www.youtube.com\/embed\/abc123\",\n      \"files\": [\"imagen1.jpg\", \"partitura_nueva.pdf\"]\n    },\n    \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n    \"updated_at\": \"2025-06-10T11:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"error\": \"Composici\u00f3n no encontrada.\",\n  \"message\": \"La composici\u00f3n con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar composici\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composiciones\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composiciones\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la composici\u00f3n."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina una composici\u00f3n existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Composici\u00f3n eliminada correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Composici\u00f3n no encontrada.\",\n  \"message\": \"La composici\u00f3n con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Composiciones de Usuario",
+            "description": "\nAPIs para gestionar las relaciones entre composiciones y usuarios",
+            "item": [
+                {
+                    "name": "Listar todas las composiciones-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composicion-usuario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composicion-usuario"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene un listado de todas las relaciones entre composiciones y usuarios.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"data\": [\n   {\n     \"composicion_id\": 1,\n     \"usuario_id\": 1,\n     \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n     \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n   }\n ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Hubo un problema al obtener las composiciones de usuario.\",\n \"message\": \"Error message\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear una nueva composici\u00f3n-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composicion-usuario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composicion-usuario"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"composicion_id\":1,\"usuario_id\":1}"
+                        },
+                        "description": "Crea una nueva relaci\u00f3n entre una composici\u00f3n y un usuario.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n \"message\": \"Composici\u00f3n de usuario creada exitosamente.\",\n \"data\": {\n   \"composicion_id\": 1,\n   \"usuario_id\": 1,\n   \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n   \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n \"message\": \"Esta composici\u00f3n de usuario ya existe.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Hubo un problema al crear la composici\u00f3n de usuario.\",\n \"message\": \"Error message\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener una composici\u00f3n-usuario espec\u00edfica",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composicion-usuario\/:composicion_id\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composicion-usuario\/:composicion_id\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "composicion_id",
+                                    "key": "composicion_id",
+                                    "value": "1",
+                                    "description": "ID de la composici\u00f3n."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Recupera la informaci\u00f3n de una relaci\u00f3n espec\u00edfica entre composici\u00f3n y usuario.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"composicion_id\": 1,\n \"usuario_id\": 1,\n \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Composici\u00f3n de usuario no encontrada.\",\n \"message\": \"No se encontr\u00f3 una relaci\u00f3n entre composici\u00f3n y usuario con esos IDs.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Hubo un problema al obtener la composici\u00f3n de usuario.\",\n \"message\": \"Error message\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar una composici\u00f3n-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/composicion-usuario\/:composicion_id\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/composicion-usuario\/:composicion_id\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "composicion_id",
+                                    "key": "composicion_id",
+                                    "value": "1",
+                                    "description": "ID de la composici\u00f3n."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina una relaci\u00f3n existente entre una composici\u00f3n y un usuario.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Registro eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"message\": \"No se encontr\u00f3 el registro para eliminar.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Hubo un problema al eliminar la composici\u00f3n de usuario.\",\n \"message\": \"Error message\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Entidades",
+            "description": "\nAPIs para gestionar entidades en el sistema",
+            "item": [
+                {
+                    "name": "Listar entidades",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/entidades",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/entidades"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todas las entidades registradas en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Lista de entidades obtenida correctamente.\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"nombre\": \"Hermandad Example\",\n            \"tipo\": \"hermandad\",\n            \"persona_contacto\": \"Juan P\u00e9rez\",\n            \"telefono\": \"123456789\",\n            \"email_contacto\": \"contacto@hermandad.com\",\n            \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n            \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n        }\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al obtener las entidades.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear entidad",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/entidades",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/entidades"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Hermandad Example\",\"tipo\":\"hermandad\",\"persona_contacto\":\"Juan P\u00e9rez\",\"telefono\":\"123456789\",\"email_contacto\":\"contacto@hermandad.com\"}"
+                        },
+                        "description": "Crea una nueva entidad con los datos proporcionados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Entidad creada correctamente.\",\n    \"data\": {\n        \"id\": 1,\n        \"nombre\": \"Hermandad Example\",\n        \"tipo\": \"hermandad\",\n        \"persona_contacto\": \"Juan P\u00e9rez\",\n        \"telefono\": \"123456789\",\n        \"email_contacto\": \"contacto@hermandad.com\",\n        \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n        \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"The given data was invalid.\",\n    \"errors\": {\n        \"nombre\": [\"El campo nombre es obligatorio.\"],\n        \"tipo\": [\"El campo tipo debe ser hermandad, ayuntamiento u otro.\"]\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al crear la entidad.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener entidad espec\u00edfica",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/entidades\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/entidades\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la entidad."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Recupera la informaci\u00f3n de una entidad espec\u00edfica por su ID.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Entidad encontrada correctamente.\",\n    \"data\": {\n        \"id\": 1,\n        \"nombre\": \"Hermandad Example\",\n        \"tipo\": \"hermandad\",\n        \"persona_contacto\": \"Juan P\u00e9rez\",\n        \"telefono\": \"123456789\",\n        \"email_contacto\": \"contacto@hermandad.com\",\n        \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n        \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"error\": \"Entidad no encontrada.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al obtener la entidad.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar entidad",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/entidades\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/entidades\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la entidad a actualizar."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Hermandad Example\",\"tipo\":\"hermandad\",\"persona_contacto\":\"Juan P\u00e9rez\",\"telefono\":\"123456789\",\"email_contacto\":\"contacto@hermandad.com\"}"
+                        },
+                        "description": "Actualiza la informaci\u00f3n de una entidad existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Entidad actualizada correctamente.\",\n    \"data\": {\n        \"id\": 1,\n        \"nombre\": \"Hermandad Example\",\n        \"tipo\": \"hermandad\",\n        \"persona_contacto\": \"Juan P\u00e9rez\",\n        \"telefono\": \"123456789\",\n        \"email_contacto\": \"contacto@hermandad.com\",\n        \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n        \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"error\": \"Entidad no encontrada.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"message\": \"The given data was invalid.\",\n    \"errors\": {\n        \"tipo\": [\"El campo tipo debe ser hermandad, ayuntamiento u otro.\"]\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al actualizar la entidad.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar entidad",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/entidades\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/entidades\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID de la entidad a eliminar."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina una entidad espec\u00edfica del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Entidad eliminada correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"error\": \"Entidad no encontrada.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al eliminar la entidad.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Eventos",
+            "description": "\nAPIs para gestionar eventos musicales",
+            "item": [
+                {
+                    "name": "Listar todos los eventos",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/eventos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/eventos"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los eventos registrados en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Eventos obtenidos correctamente.\",\n   \"eventos\": [\n     {\n       \"id\": 1,\n       \"nombre\": \"Ensayo General\",\n       \"fecha\": \"2025-06-15\",\n       \"lugar\": \"Sala de Ensayos Principal\",\n       \"hora\": \"19:00\",\n       \"estado\": \"planificado\",\n       \"tipo\": \"ensayo\",\n       \"entidad_id\": 1\n     }\n   ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n   \"error\": \"Hubo un problema al obtener los eventos.\",\n   \"message\": \"Error message here\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear un nuevo evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/eventos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/eventos"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Ensayo General\",\"fecha\":\"2025-06-15\",\"lugar\":\"Sala de Ensayos Principal\",\"hora\":\"19:00\",\"estado\":\"planificado\",\"tipo\":\"ensayo\",\"entidad_id\":1}"
+                        },
+                        "description": "Crea un nuevo evento con los datos proporcionados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Evento creado correctamente.\",\n   \"evento\": {\n     \"id\": 1,\n     \"nombre\": \"Ensayo General\",\n     \"fecha\": \"2025-06-15\",\n     \"lugar\": \"Sala de Ensayos Principal\",\n     \"hora\": \"19:00\",\n     \"estado\": \"planificado\",\n     \"tipo\": \"ensayo\",\n     \"entidad_id\": 1\n   }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n   \"message\": \"The given data was invalid.\",\n   \"errors\": {\n     \"nombre\": [\"El campo nombre es obligatorio.\"]\n   }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener un evento espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/eventos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/eventos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del evento."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Muestra la informaci\u00f3n detallada de un evento espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Evento obtenido correctamente.\",\n   \"evento\": {\n     \"id\": 1,\n     \"nombre\": \"Ensayo General\",\n     \"fecha\": \"2025-06-15\",\n     \"lugar\": \"Sala de Ensayos Principal\",\n     \"hora\": \"19:00\",\n     \"estado\": \"planificado\",\n     \"tipo\": \"ensayo\",\n     \"entidad_id\": 1\n   }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n   \"error\": \"Evento no encontrado.\",\n   \"message\": \"El evento con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar un evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/eventos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/eventos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del evento."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Ensayo General Actualizado\",\"fecha\":\"2025-06-16\",\"lugar\":\"Sala de Ensayos Secundaria\",\"hora\":\"20:00\",\"estado\":\"en progreso\",\"tipo\":\"ensayo\",\"entidad_id\":1}"
+                        },
+                        "description": "Actualiza la informaci\u00f3n de un evento existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Evento actualizado correctamente.\",\n   \"evento\": {\n     \"id\": 1,\n     \"nombre\": \"Ensayo General Actualizado\",\n     \"fecha\": \"2025-06-16\",\n     \"lugar\": \"Sala de Ensayos Secundaria\",\n     \"hora\": \"20:00\",\n     \"estado\": \"en progreso\",\n     \"tipo\": \"ensayo\",\n     \"entidad_id\": 1\n   }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n   \"error\": \"Evento no encontrado.\",\n   \"message\": \"El evento con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar un evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/eventos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/eventos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del evento a eliminar."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un evento espec\u00edfico del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n   \"message\": \"Evento eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n   \"error\": \"Evento no encontrado.\",\n   \"message\": \"El evento con el ID 1 no existe.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Eventos por Usuario",
+            "description": "\nAPIs para gestionar la relaci\u00f3n entre eventos y usuarios",
+            "item": [
+                {
+                    "name": "Listar eventos por usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/evento-usuario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/evento-usuario"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene un listado de todas las relaciones entre eventos y usuarios.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Listado de eventos por usuario obtenido correctamente.\",\n  \"data\": [\n    {\n      \"evento_id\": 1,\n      \"usuario_id\": 1,\n      \"confirmacion\": true,\n      \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n      \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n    }\n  ]\n}",
+                            "name": "\u00c9xito"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"error\": \"Error al obtener los eventos de usuarios.\",\n  \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": "Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear evento por usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/evento-usuario",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/evento-usuario"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"evento_id\":1,\"usuario_id\":1,\"confirmacion\":true}"
+                        },
+                        "description": "Registra un nuevo evento-usuario en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Evento de usuario creado correctamente.\",\n  \"data\": {\n    \"evento_id\": 1,\n    \"usuario_id\": 1,\n    \"confirmacion\": true,\n    \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n    \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n  }\n}",
+                            "name": "Creado"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"error\": \"El usuario ya est\u00e1 registrado para este evento.\"\n}",
+                            "name": "Usuario ya registrado"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"error\": {\n    \"evento_id\": [\"El evento_id es requerido.\"],\n    \"usuario_id\": [\"El usuario_id es requerido.\"]\n  }\n}",
+                            "name": "Error de validaci\u00f3n"
+                        }
+                    ]
+                },
+                {
+                    "name": "Mostrar evento por usuario espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "El ID del evento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene los detalles de un registro espec\u00edfico de evento-usuario incluyendo la informaci\u00f3n relacionada.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Evento usuario obtenido correctamente.\",\n  \"data\": {\n    \"evento_id\": 1,\n    \"usuario_id\": 1,\n    \"confirmacion\": true,\n    \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n    \"updated_at\": \"2025-06-10T12:00:00.000000Z\",\n    \"evento\": {\n      \"id\": 1,\n      \"nombre\": \"Ensayo General\",\n      \"descripcion\": \"Ensayo general de la banda\"\n    },\n    \"usuario\": {\n      \"id\": 1,\n      \"nombre\": \"Juan P\u00e9rez\",\n      \"email\": \"juan@ejemplo.com\"\n    }\n  }\n}",
+                            "name": "\u00c9xito"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Evento usuario no encontrado.\"\n}",
+                            "name": "No encontrado"
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar confirmaci\u00f3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "ID del evento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"confirmacion\":true}"
+                        },
+                        "description": "Actualiza el estado de confirmaci\u00f3n de un usuario para un evento espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Confirmaci\u00f3n actualizada correctamente.\"\n}",
+                            "name": "\u00c9xito"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No se encontr\u00f3 el registro para actualizar.\"\n}",
+                            "name": "No encontrado"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"error\": {\n    \"confirmacion\": [\"El campo confirmacion es requerido.\"]\n  }\n}",
+                            "name": "Error de validaci\u00f3n"
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar evento por usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/evento-usuario\/:evento_id\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "ID del evento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un registro de evento-usuario espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Registro eliminado correctamente.\"\n}",
+                            "name": "\u00c9xito"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No se encontr\u00f3 el registro para eliminar.\"\n}",
+                            "name": "No encontrado"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Instrumentos",
+            "description": "\nAPIs para gestionar instrumentos musicales",
+            "item": [
+                {
+                    "name": "Listar todos los instrumentos",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/instrumentos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/instrumentos"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los instrumentos registrados en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"data\": [\n   {\n     \"numero_serie\": \"ABC123\",\n     \"estado\": \"disponible\",\n     \"instrumento_tipo_id\": \"Trompeta\",\n     \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n     \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n   }\n ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener la lista de instrumentos.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear un nuevo instrumento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/instrumentos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/instrumentos"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"numero_serie\":\"ABC123\",\"estado\":\"disponible\",\"instrumento_tipo_id\":\"Trompeta\"}"
+                        },
+                        "description": "Crea un nuevo instrumento con los datos proporcionados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n \"numero_serie\": \"ABC123\",\n \"estado\": \"disponible\",\n \"instrumento_tipo_id\": \"Trompeta\",\n \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": {\n   \"numero_serie\": [\"El n\u00famero de serie es obligatorio.\"],\n   \"estado\": [\"El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.\"],\n   \"instrumento_tipo_id\": [\"El tipo de instrumento es obligatorio.\"]\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al crear el instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mostrar un instrumento espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the instrumento."
+                                },
+                                {
+                                    "id": "numero_serie",
+                                    "key": "numero_serie",
+                                    "value": "ABC123",
+                                    "description": "El n\u00famero de serie del instrumento."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene los detalles de un instrumento espec\u00edfico por su n\u00famero de serie.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"numero_serie\": \"ABC123\",\n \"estado\": \"disponible\",\n \"instrumento_tipo_id\": \"Trompeta\",\n \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"message\": \"El instrumento con este n\u00famero de serie no existe.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al buscar el instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar un instrumento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the instrumento."
+                                },
+                                {
+                                    "id": "numero_serie",
+                                    "key": "numero_serie",
+                                    "value": "ABC123",
+                                    "description": "El n\u00famero de serie del instrumento a actualizar."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"estado\":\"prestado\",\"instrumento_tipo_id\":\"Trompeta\"}"
+                        },
+                        "description": "Actualiza los datos de un instrumento existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"numero_serie\": \"ABC123\",\n \"estado\": \"prestado\",\n \"instrumento_tipo_id\": \"Trompeta\",\n \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"message\": \"Instrumento no encontrado\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": {\n   \"estado\": [\"El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.\"],\n   \"instrumento_tipo_id\": [\"El tipo de instrumento no es v\u00e1lido.\"]\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al actualizar el instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar un instrumento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "architecto",
+                                    "description": "The ID of the instrumento."
+                                },
+                                {
+                                    "id": "numero_serie",
+                                    "key": "numero_serie",
+                                    "value": "ABC123",
+                                    "description": "El n\u00famero de serie del instrumento a eliminar."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un instrumento espec\u00edfico del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Instrumento eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"message\": \"El instrumento con este n\u00famero de serie no existe.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al eliminar el instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Mensajes",
+            "description": "\nAPIs para gestionar mensajes en el sistema",
+            "item": [
+                {
+                    "name": "Listar mensajes",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensajes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensajes"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los mensajes con informaci\u00f3n del emisor.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Mensajes obtenidos correctamente.\",\n \"data\": [\n   {\n     \"id\": 1,\n     \"asunto\": \"Ejemplo de asunto\",\n     \"contenido\": \"Contenido del mensaje\",\n     \"usuario_id_emisor\": 1,\n     \"created_at\": \"2025-06-10T12:00:00Z\",\n     \"updated_at\": \"2025-06-10T12:00:00Z\",\n     \"emisor\": {\n       \"id\": 1,\n       \"nombre\": \"Usuario Ejemplo\"\n     }\n   }\n ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener los mensajes.\",\n \"message\": \"Mensaje de error detallado\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear mensaje",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensajes",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensajes"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"asunto\":\"Reuni\u00f3n importante\",\"contenido\":\"Contenido detallado del mensaje\",\"usuario_id_emisor\":1}"
+                        },
+                        "description": "Crea un nuevo mensaje en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n \"message\": \"Mensaje creado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"asunto\": \"Reuni\u00f3n importante\",\n   \"contenido\": \"Contenido detallado del mensaje\",\n   \"usuario_id_emisor\": 1,\n   \"created_at\": \"2025-06-10T12:00:00Z\",\n   \"updated_at\": \"2025-06-10T12:00:00Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": {\n   \"asunto\": [\"El campo asunto es obligatorio.\"],\n   \"contenido\": [\"El campo contenido es obligatorio.\"],\n   \"usuario_id_emisor\": [\"El usuario especificado no existe.\"]\n }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener mensaje espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensajes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensajes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene la informaci\u00f3n detallada de un mensaje espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Mensaje obtenido correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"asunto\": \"Ejemplo de asunto\",\n   \"contenido\": \"Contenido del mensaje\",\n   \"usuario_id_emisor\": 1,\n   \"created_at\": \"2025-06-10T12:00:00Z\",\n   \"updated_at\": \"2025-06-10T12:00:00Z\",\n   \"emisor\": {\n     \"id\": 1,\n     \"nombre\": \"Usuario Ejemplo\"\n   }\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Mensaje no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener el mensaje.\",\n \"message\": \"Mensaje de error detallado\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar mensaje",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensajes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensajes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje a actualizar."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"asunto\":\"Reuni\u00f3n actualizada\",\"contenido\":\"Contenido actualizado del mensaje\",\"usuario_id_emisor\":1}"
+                        },
+                        "description": "Actualiza la informaci\u00f3n de un mensaje existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Mensaje actualizado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"asunto\": \"Reuni\u00f3n actualizada\",\n   \"contenido\": \"Contenido actualizado del mensaje\",\n   \"usuario_id_emisor\": 1,\n   \"created_at\": \"2025-06-10T12:00:00Z\",\n   \"updated_at\": \"2025-06-10T12:00:00Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Mensaje no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": {\n   \"asunto\": [\"El campo asunto no puede exceder los 255 caracteres.\"]\n }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar mensaje",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensajes\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensajes\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje a eliminar."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un mensaje espec\u00edfico del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Mensaje eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Mensaje no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al eliminar el mensaje.\",\n \"message\": \"Mensaje de error detallado\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Mensajes-Usuario",
+            "description": "",
+            "item": [
+                {
+                    "name": "Mostrar lista de todas las relaciones de mensajes de usuarios",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensaje-usuarios",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensaje-usuarios"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Relaciones de mensajes de usuario listadas exitosamente\",\n    \"data\": [\n        {\n            \"mensaje_id\": 1,\n            \"usuario_id_receptor\": 1,\n            \"estado\": true,\n            \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n            \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n        }\n    ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al listar relaciones de mensajes de usuario.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener una relaci\u00f3n espec\u00edfica de mensaje-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "variable": [
+                                {
+                                    "id": "mensaje_id",
+                                    "key": "mensaje_id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje."
+                                },
+                                {
+                                    "id": "usuario_id_receptor",
+                                    "key": "usuario_id_receptor",
+                                    "value": "1",
+                                    "description": "El ID del usuario receptor."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Relaci\u00f3n de mensaje de usuario encontrada\",\n    \"data\": {\n        \"mensaje_id\": 1,\n        \"usuario_id_receptor\": 1,\n        \"estado\": true,\n        \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n        \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"Relaci\u00f3n de mensaje de usuario no encontrada.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al obtener la relaci\u00f3n.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear una nueva relaci\u00f3n mensaje-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensaje-usuarios",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensaje-usuarios"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"mensaje_id\":1,\"usuario_id_receptor\":1,\"estado\":true}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"Relaci\u00f3n de mensaje de usuario creada exitosamente\",\n    \"data\": {\n        \"mensaje_id\": 1,\n        \"usuario_id_receptor\": 1,\n        \"estado\": true,\n        \"created_at\": \"2025-06-10T10:00:00.000000Z\",\n        \"updated_at\": \"2025-06-10T10:00:00.000000Z\"\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n    \"message\": \"Esta relaci\u00f3n de mensaje ya existe.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"error\": {\n        \"mensaje_id\": [\"El campo mensaje_id es obligatorio.\"],\n        \"usuario_id_receptor\": [\"El campo usuario_id_receptor es obligatorio.\"],\n        \"estado\": [\"El campo estado es obligatorio.\"]\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al crear la relaci\u00f3n.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar el estado de una relaci\u00f3n mensaje-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "variable": [
+                                {
+                                    "id": "mensaje_id",
+                                    "key": "mensaje_id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje."
+                                },
+                                {
+                                    "id": "usuario_id_receptor",
+                                    "key": "usuario_id_receptor",
+                                    "value": "1",
+                                    "description": "El ID del usuario receptor."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"estado\":true}"
+                        },
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Estado actualizado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No se encontr\u00f3 la relaci\u00f3n.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"error\": {\n        \"estado\": [\"El campo estado es obligatorio.\"]\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al actualizar el estado.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar una relaci\u00f3n mensaje-usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mensaje-usuarios\/:mensaje_id\/:usuario_id_receptor",
+                            "variable": [
+                                {
+                                    "id": "mensaje_id",
+                                    "key": "mensaje_id",
+                                    "value": "1",
+                                    "description": "El ID del mensaje a eliminar."
+                                },
+                                {
+                                    "id": "usuario_id_receptor",
+                                    "key": "usuario_id_receptor",
+                                    "value": "architecto",
+                                    "description": ""
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "El ID del usuario receptor."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Registro eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No se encontr\u00f3 el registro para eliminar.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al eliminar el registro.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de M\u00ednimos por Evento",
+            "description": "\nAPIs para gestionar los m\u00ednimos de instrumentos requeridos por evento",
+            "item": [
+                {
+                    "name": "Listar M\u00ednimos por Evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/minimos-evento",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/minimos-evento"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene un listado de todos los m\u00ednimos de instrumentos requeridos por cada evento.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Listado de m\u00ednimos por evento obtenido correctamente.\",\n    \"data\": [{\n        \"evento_id\": 1,\n        \"instrumento_tipo_id\": \"GUITARRA\",\n        \"cantidad\": 2,\n        \"evento\": {\n            \"id\": 1,\n            \"nombre\": \"Concierto Example\"\n        },\n        \"tipoInstrumento\": {\n            \"instrumento\": \"GUITARRA\",\n            \"nombre\": \"Guitarra\"\n        }\n    }]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n    \"error\": \"Error al obtener los m\u00ednimos por evento.\",\n    \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear M\u00ednimo por Evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/minimos-evento",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/minimos-evento"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"evento_id\":1,\"instrumento_tipo_id\":\"GUITARRA\",\"cantidad\":2}"
+                        },
+                        "description": "Crea un nuevo registro de m\u00ednimo de instrumentos requeridos para un evento.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n    \"message\": \"M\u00ednimo de instrumento creado correctamente.\",\n    \"data\": {\n        \"evento_id\": 1,\n        \"instrumento_tipo_id\": \"GUITARRA\",\n        \"cantidad\": 2\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"error\": {\n        \"evento_id\": [\"El evento seleccionado no existe.\"],\n        \"instrumento_tipo_id\": [\"El tipo de instrumento ya existe para este evento.\"],\n        \"cantidad\": [\"La cantidad debe ser al menos 1.\"]\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener M\u00ednimo Espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "ID del evento."
+                                },
+                                {
+                                    "id": "instrumento_tipo_id",
+                                    "key": "instrumento_tipo_id",
+                                    "value": "GUITARRA",
+                                    "description": "ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene el detalle de un m\u00ednimo de instrumento espec\u00edfico para un evento.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"M\u00ednimo de instrumento obtenido correctamente.\",\n    \"data\": {\n        \"evento_id\": 1,\n        \"instrumento_tipo_id\": \"GUITARRA\",\n        \"cantidad\": 2,\n        \"evento\": {\n            \"id\": 1,\n            \"nombre\": \"Concierto Example\"\n        },\n        \"tipoInstrumento\": {\n            \"instrumento\": \"GUITARRA\",\n            \"nombre\": \"Guitarra\"\n        }\n    }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"error\": \"M\u00ednimo de instrumento no encontrado.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar M\u00ednimo por Evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "ID del evento."
+                                },
+                                {
+                                    "id": "instrumento_tipo_id",
+                                    "key": "instrumento_tipo_id",
+                                    "value": "GUITARRA",
+                                    "description": "ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"cantidad\":3}"
+                        },
+                        "description": "Actualiza la cantidad m\u00ednima requerida de un instrumento para un evento espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Registro actualizado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"message\": \"No se encontr\u00f3 el registro para actualizar.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n    \"error\": {\n        \"cantidad\": [\"La cantidad debe ser al menos 1.\"]\n    }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar M\u00ednimo por Evento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/minimos-evento\/:evento_id\/:instrumento_tipo_id",
+                            "variable": [
+                                {
+                                    "id": "evento_id",
+                                    "key": "evento_id",
+                                    "value": "1",
+                                    "description": "ID del evento."
+                                },
+                                {
+                                    "id": "instrumento_tipo_id",
+                                    "key": "instrumento_tipo_id",
+                                    "value": "GUITARRA",
+                                    "description": "ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un registro de m\u00ednimo de instrumentos requeridos para un evento.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n    \"message\": \"Registro eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n    \"error\": \"Registro no encontrado.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Pr\u00e9stamos de Instrumentos",
+            "description": "\nAPIs para gestionar los pr\u00e9stamos de instrumentos",
+            "item": [
+                {
+                    "name": "Listar pr\u00e9stamos",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/prestamos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/prestamos"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los pr\u00e9stamos de instrumentos con sus relaciones.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Listado de pr\u00e9stamos obtenido correctamente.\",\n  \"data\": [\n    {\n      \"num_serie\": \"123ABC\",\n      \"usuario_id\": 1,\n      \"fecha_prestamo\": \"2025-06-10\",\n      \"fecha_devolucion\": null,\n      \"instrumento\": {\n        \"numero_serie\": \"123ABC\",\n        \"nombre\": \"Guitarra El\u00e9ctrica\",\n        \"estado\": \"prestado\"\n      },\n      \"usuario\": {\n        \"id\": 1,\n        \"nombre\": \"Juan P\u00e9rez\"\n      }\n    }\n  ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"error\": \"Error al obtener los pr\u00e9stamos.\",\n  \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear pr\u00e9stamo",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/prestamos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/prestamos"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"num_serie\":\"123ABC\",\"usuario_id\":1,\"fecha_prestamo\":\"2025-06-10\",\"fecha_devolucion\":\"2025-06-17\"}"
+                        },
+                        "description": "Crea un nuevo pr\u00e9stamo de instrumento y actualiza el estado del instrumento.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"Pr\u00e9stamo creado correctamente.\",\n  \"data\": {\n    \"num_serie\": \"123ABC\",\n    \"usuario_id\": 1,\n    \"fecha_prestamo\": \"2025-06-10\",\n    \"fecha_devolucion\": null\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\"error\": \"El instrumento no est\u00e1 disponible para pr\u00e9stamo.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\"error\": \"Este usuario ya tiene un pr\u00e9stamo activo para este instrumento.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"error\": \"Instrumento no encontrado.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\"error\": {\"num_serie\": [\"El n\u00famero de serie es obligatorio.\"]}}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mostrar pr\u00e9stamo espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/prestamos\/:num_serie\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/prestamos\/:num_serie\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "num_serie",
+                                    "key": "num_serie",
+                                    "value": "123ABC",
+                                    "description": "El n\u00famero de serie del instrumento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene los detalles de un pr\u00e9stamo espec\u00edfico por n\u00famero de serie y ID de usuario.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Pr\u00e9stamo obtenido correctamente.\",\n  \"data\": {\n    \"num_serie\": \"123ABC\",\n    \"usuario_id\": 1,\n    \"fecha_prestamo\": \"2025-06-10\",\n    \"fecha_devolucion\": null,\n    \"instrumento\": {\n      \"numero_serie\": \"123ABC\",\n      \"nombre\": \"Guitarra El\u00e9ctrica\",\n      \"estado\": \"prestado\"\n    },\n    \"usuario\": {\n      \"id\": 1,\n      \"nombre\": \"Juan P\u00e9rez\"\n    }\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\"error\": \"Pr\u00e9stamo no encontrado.\"}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"error\": \"Error al obtener el pr\u00e9stamo.\",\n  \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar pr\u00e9stamo",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/prestamos\/:num_serie\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/prestamos\/:num_serie\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "num_serie",
+                                    "key": "num_serie",
+                                    "value": "123ABC",
+                                    "description": "N\u00famero de serie del instrumento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"fecha_prestamo\":\"2025-06-10\",\"fecha_devolucion\":\"2025-06-17\"}"
+                        },
+                        "description": "Actualiza las fechas de un pr\u00e9stamo existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Pr\u00e9stamo actualizado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"No se encontr\u00f3 el pr\u00e9stamo para actualizar.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"error\": {\n    \"fecha_prestamo\": [\"La fecha de pr\u00e9stamo es obligatoria.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar pr\u00e9stamo",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/prestamos\/:num_serie\/:usuario_id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/prestamos\/:num_serie\/:usuario_id",
+                            "variable": [
+                                {
+                                    "id": "num_serie",
+                                    "key": "num_serie",
+                                    "value": "123ABC",
+                                    "description": "N\u00famero de serie del instrumento."
+                                },
+                                {
+                                    "id": "usuario_id",
+                                    "key": "usuario_id",
+                                    "value": "1",
+                                    "description": "ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un pr\u00e9stamo existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Pr\u00e9stamo eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"error\": \"Pr\u00e9stamo no encontrado para eliminar.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"error\": \"Error al eliminar el pr\u00e9stamo.\",\n  \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Tipos de Instrumentos",
+            "description": "\nAPIs para gestionar los tipos de instrumentos en el sistema",
+            "item": [
+                {
+                    "name": "Listar todos los tipos de instrumentos",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipo-instrumentos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipo-instrumentos"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los tipos de instrumentos disponibles en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Tipos de instrumentos obtenidos correctamente.\",\n \"data\": [\n   {\n     \"id\": 1,\n     \"instrumento\": \"Guitarra\",\n     \"cantidad\": 5,\n     \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n     \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n   }\n ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener los tipos de instrumentos.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Crear un nuevo tipo de instrumento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipo-instrumentos",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipo-instrumentos"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"instrumento\":\"Viol\u00edn\",\"cantidad\":3}"
+                        },
+                        "description": "Crea un nuevo tipo de instrumento con los datos proporcionados.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n \"message\": \"Tipo de instrumento creado correctamente.\",\n \"data\": {\n   \"id\": 2,\n   \"instrumento\": \"Viol\u00edn\",\n   \"cantidad\": 3,\n   \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n   \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": \"Datos de entrada inv\u00e1lidos.\",\n \"details\": {\n   \"instrumento\": [\"El instrumento ya existe.\"],\n   \"cantidad\": [\"La cantidad debe ser al menos 1.\"]\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al crear el tipo de instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Obtener un tipo de instrumento espec\u00edfico",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipo-instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipo-instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Muestra la informaci\u00f3n detallada de un tipo de instrumento espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Tipo de instrumento obtenido correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"instrumento\": \"Guitarra\",\n   \"cantidad\": 5,\n   \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n   \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Tipo de instrumento no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener el tipo de instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar un tipo de instrumento existente",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipo-instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipo-instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"instrumento\":\"Guitarra El\u00e9ctrica\",\"cantidad\":4}"
+                        },
+                        "description": "Actualiza los datos de un tipo de instrumento espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Tipo de instrumento actualizado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"instrumento\": \"Guitarra El\u00e9ctrica\",\n   \"cantidad\": 4,\n   \"created_at\": \"2025-06-10T12:00:00.000000Z\",\n   \"updated_at\": \"2025-06-10T12:00:00.000000Z\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Tipo de instrumento no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": \"Datos de entrada inv\u00e1lidos.\",\n \"details\": {\n   \"instrumento\": [\"El instrumento ya existe.\"],\n   \"cantidad\": [\"La cantidad debe ser al menos 1.\"]\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al actualizar el tipo de instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar un tipo de instrumento",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/tipo-instrumentos\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/tipo-instrumentos\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del tipo de instrumento."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un tipo de instrumento espec\u00edfico del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Tipo de instrumento eliminado correctamente.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Tipo de instrumento no encontrado.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al eliminar el tipo de instrumento.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Gesti\u00f3n de Usuarios",
+            "description": "\nAPIs para gestionar usuarios en el sistema",
+            "item": [
+                {
+                    "name": "Enviar correo personalizado",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/mailTo",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/mailTo"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"usuario@ejemplo.com\",\"mensaje\":\"Este es un mensaje personalizado.\"}"
+                        },
+                        "description": "Env\u00eda un correo electr\u00f3nico personalizado a un usuario.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"success\": \"Correo enviado correctamente con vista personalizada\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n \"error\": \"Datos inv\u00e1lidos\",\n \"messages\": {\n   \"email\": [\"El campo email es obligatorio.\"],\n   \"mensaje\": [\"El campo mensaje es obligatorio.\"]\n }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Listar usuarios",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Obtiene una lista de todos los usuarios registrados en el sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuarios obtenidos correctamente.\",\n \"data\": [\n   {\n     \"id\": 1,\n     \"nombre\": \"Juan\",\n     \"apellido1\": \"P\u00e9rez\",\n     \"apellido2\": \"Garc\u00eda\",\n     \"telefono\": \"123456789\",\n     \"email\": \"juan@ejemplo.com\",\n     \"estado\": \"activo\",\n     \"fecha_nac\": \"1990-01-01\",\n     \"fecha_entrada\": \"2023-01-01\",\n     \"role\": \"miembro\"\n   }\n ]\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n \"error\": \"Error al obtener los usuarios.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Mostrar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Muestra la informaci\u00f3n de un usuario espec\u00edfico.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuario obtenido correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"nombre\": \"Juan\",\n   \"apellido1\": \"P\u00e9rez\",\n   \"apellido2\": \"Garc\u00eda\",\n   \"telefono\": \"123456789\",\n   \"email\": \"juan@ejemplo.com\",\n   \"estado\": \"activo\",\n   \"fecha_nac\": \"1990-01-01\",\n   \"fecha_entrada\": \"2023-01-01\",\n   \"role\": \"miembro\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Usuario no encontrado.\",\n \"message\": \"Mensaje de error espec\u00edfico\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Actualizar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"nombre\":\"Juan\",\"apellido1\":\"P\u00e9rez\",\"apellido2\":\"Garc\u00eda\",\"telefono\":\"123456789\",\"email\":\"juan@ejemplo.com\",\"password\":\"newpassword123\",\"password_confirmation\":\"newpassword123\",\"estado\":\"activo\",\"fecha_nac\":\"1990-01-01\",\"fecha_entrada\":\"2023-01-01\",\"role\":\"miembro\"}"
+                        },
+                        "description": "Actualiza la informaci\u00f3n de un usuario existente.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuario actualizado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"nombre\": \"Juan\",\n   \"apellido1\": \"P\u00e9rez\",\n   \"apellido2\": \"Garc\u00eda\",\n   \"telefono\": \"123456789\",\n   \"email\": \"juan@ejemplo.com\",\n   \"estado\": \"activo\",\n   \"fecha_nac\": \"1990-01-01\",\n   \"fecha_entrada\": \"2023-01-01\",\n   \"role\": \"miembro\"\n }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Eliminar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Elimina un usuario del sistema.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuario eliminado correctamente.\",\n \"data\": {\n   \"id\": 1\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Usuario no encontrado.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Aprobar usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id\/approve",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Cambia el estado de un usuario a 'activo'.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuario aprobado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"estado\": \"activo\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n \"error\": \"Usuario no encontrado.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Bloquear usuario",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/usuarios\/:id\/block",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/usuarios\/:id\/block",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "1",
+                                    "description": "El ID del usuario."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Cambia el estado de un usuario a 'bloqueado'.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n \"message\": \"Usuario bloqueado correctamente.\",\n \"data\": {\n   \"id\": 1,\n   \"estado\": \"bloqueado\"\n }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n \"error\": \"Este usuario ya est\u00e1 bloqueado.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "noauth"
+    }
+}

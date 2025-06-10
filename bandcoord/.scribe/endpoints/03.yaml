@@ -1,0 +1,421 @@
+name: 'Gestión de Tipos de Instrumentos'
+description: |-
+
+  APIs para gestionar los tipos de instrumentos en el sistema
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/tipo-instrumentos
+    metadata:
+      groupName: 'Gestión de Tipos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los tipos de instrumentos en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar todos los tipos de instrumentos'
+      description: 'Obtiene una lista de todos los tipos de instrumentos disponibles en el sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Tipos de instrumentos obtenidos correctamente.",
+           "data": [
+             {
+               "id": 1,
+               "instrumento": "Guitarra",
+               "cantidad": 5,
+               "created_at": "2025-06-10T12:00:00.000000Z",
+               "updated_at": "2025-06-10T12:00:00.000000Z"
+             }
+           ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al obtener los tipos de instrumentos.",
+           "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/tipo-instrumentos
+    metadata:
+      groupName: 'Gestión de Tipos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los tipos de instrumentos en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear un nuevo tipo de instrumento'
+      description: 'Crea un nuevo tipo de instrumento con los datos proporcionados.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      instrumento:
+        name: instrumento
+        description: 'Nombre del instrumento.'
+        required: true
+        example: Violín
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      cantidad:
+        name: cantidad
+        description: 'Cantidad disponible del instrumento.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      instrumento: Violín
+      cantidad: 3
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+           "message": "Tipo de instrumento creado correctamente.",
+           "data": {
+             "id": 2,
+             "instrumento": "Violín",
+             "cantidad": 3,
+             "created_at": "2025-06-10T12:00:00.000000Z",
+             "updated_at": "2025-06-10T12:00:00.000000Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+           "error": "Datos de entrada inválidos.",
+           "details": {
+             "instrumento": ["El instrumento ya existe."],
+             "cantidad": ["La cantidad debe ser al menos 1."]
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al crear el tipo de instrumento.",
+           "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/tipo-instrumentos/{id}'
+    metadata:
+      groupName: 'Gestión de Tipos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los tipos de instrumentos en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Obtener un tipo de instrumento específico'
+      description: 'Muestra la información detallada de un tipo de instrumento específico.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del tipo de instrumento.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Tipo de instrumento obtenido correctamente.",
+           "data": {
+             "id": 1,
+             "instrumento": "Guitarra",
+             "cantidad": 5,
+             "created_at": "2025-06-10T12:00:00.000000Z",
+             "updated_at": "2025-06-10T12:00:00.000000Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Tipo de instrumento no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al obtener el tipo de instrumento.",
+           "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/tipo-instrumentos/{id}'
+    metadata:
+      groupName: 'Gestión de Tipos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los tipos de instrumentos en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar un tipo de instrumento existente'
+      description: 'Actualiza los datos de un tipo de instrumento específico.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del tipo de instrumento.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      instrumento:
+        name: instrumento
+        description: 'El nombre del instrumento.'
+        required: false
+        example: 'Guitarra Eléctrica'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      cantidad:
+        name: cantidad
+        description: 'La cantidad disponible del instrumento.'
+        required: false
+        example: 4
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      instrumento: 'Guitarra Eléctrica'
+      cantidad: 4
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Tipo de instrumento actualizado correctamente.",
+           "data": {
+             "id": 1,
+             "instrumento": "Guitarra Eléctrica",
+             "cantidad": 4,
+             "created_at": "2025-06-10T12:00:00.000000Z",
+             "updated_at": "2025-06-10T12:00:00.000000Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Tipo de instrumento no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+           "error": "Datos de entrada inválidos.",
+           "details": {
+             "instrumento": ["El instrumento ya existe."],
+             "cantidad": ["La cantidad debe ser al menos 1."]
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al actualizar el tipo de instrumento.",
+           "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/tipo-instrumentos/{id}'
+    metadata:
+      groupName: 'Gestión de Tipos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los tipos de instrumentos en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar un tipo de instrumento'
+      description: 'Elimina un tipo de instrumento específico del sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del tipo de instrumento.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Tipo de instrumento eliminado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Tipo de instrumento no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al eliminar el tipo de instrumento.",
+           "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

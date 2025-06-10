@@ -8,8 +8,35 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * @group Gestión de Mensajes de Usuarios
+ *
+ * APIs para gestionar mensajes de usuarios en el sistema
+ */
 class MensajeUsuarioController extends Controller
 {
+    /**
+     * Mostrar lista de todas las relaciones de mensajes de usuarios
+     *
+     * @group Gestión de Mensajes-Usuario
+     *
+     * @response 200 {
+     *     "message": "Relaciones de mensajes de usuario listadas exitosamente",
+     *     "data": [
+     *         {
+     *             "mensaje_id": 1,
+     *             "usuario_id_receptor": 1,
+     *             "estado": true,
+     *             "created_at": "2025-06-10T10:00:00.000000Z",
+     *             "updated_at": "2025-06-10T10:00:00.000000Z"
+     *         }
+     *     ]
+     * }
+     * @response 500 {
+     *     "error": "Error al listar relaciones de mensajes de usuario.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     // Listar todas las relaciones de mensajes de usuarios
     public function index()
     {
@@ -27,6 +54,32 @@ class MensajeUsuarioController extends Controller
         }
     }
 
+    /**
+     * Obtener una relación específica de mensaje-usuario
+     *
+     * @group Gestión de Mensajes-Usuario
+     *
+     * @urlParam mensaje_id required El ID del mensaje. Example: 1
+     * @urlParam usuario_id_receptor required El ID del usuario receptor. Example: 1
+     *
+     * @response 200 {
+     *     "message": "Relación de mensaje de usuario encontrada",
+     *     "data": {
+     *         "mensaje_id": 1,
+     *         "usuario_id_receptor": 1,
+     *         "estado": true,
+     *         "created_at": "2025-06-10T10:00:00.000000Z",
+     *         "updated_at": "2025-06-10T10:00:00.000000Z"
+     *     }
+     * }
+     * @response 404 {
+     *     "message": "Relación de mensaje de usuario no encontrada."
+     * }
+     * @response 500 {
+     *     "error": "Error al obtener la relación.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     // Obtener una relación de mensaje de usuario
     public function show($mensaje_id, $usuario_id_receptor)
     {
@@ -46,6 +99,40 @@ class MensajeUsuarioController extends Controller
         }
     }
 
+    /**
+     * Crear una nueva relación mensaje-usuario
+     *
+     * @group Gestión de Mensajes-Usuario
+     *
+     * @bodyParam mensaje_id integer required ID del mensaje. Example: 1
+     * @bodyParam usuario_id_receptor integer required ID del usuario receptor. Example: 1
+     * @bodyParam estado boolean required Estado del mensaje. Example: true
+     *
+     * @response 201 {
+     *     "message": "Relación de mensaje de usuario creada exitosamente",
+     *     "data": {
+     *         "mensaje_id": 1,
+     *         "usuario_id_receptor": 1,
+     *         "estado": true,
+     *         "created_at": "2025-06-10T10:00:00.000000Z",
+     *         "updated_at": "2025-06-10T10:00:00.000000Z"
+     *     }
+     * }
+     * @response 409 {
+     *     "message": "Esta relación de mensaje ya existe."
+     * }
+     * @response 422 {
+     *     "error": {
+     *         "mensaje_id": ["El campo mensaje_id es obligatorio."],
+     *         "usuario_id_receptor": ["El campo usuario_id_receptor es obligatorio."],
+     *         "estado": ["El campo estado es obligatorio."]
+     *     }
+     * }
+     * @response 500 {
+     *     "error": "Error al crear la relación.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     // Crear una nueva relación de mensaje de usuario
     public function store(Request $request)
     {
@@ -80,6 +167,31 @@ class MensajeUsuarioController extends Controller
         }
     }
 
+    /**
+     * Actualizar el estado de una relación mensaje-usuario
+     *
+     * @group Gestión de Mensajes-Usuario
+     *
+     * @urlParam mensaje_id required El ID del mensaje. Example: 1
+     * @urlParam usuario_id_receptor required El ID del usuario receptor. Example: 1
+     * @bodyParam estado boolean required Nuevo estado del mensaje. Example: true
+     *
+     * @response 200 {
+     *     "message": "Estado actualizado correctamente."
+     * }
+     * @response 404 {
+     *     "message": "No se encontró la relación."
+     * }
+     * @response 422 {
+     *     "error": {
+     *         "estado": ["El campo estado es obligatorio."]
+     *     }
+     * }
+     * @response 500 {
+     *     "error": "Error al actualizar el estado.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     // Actualizar el estado de una relación de mensaje de usuario
     public function update(Request $request, $mensaje_id, $usuario_id_receptor)
     {
@@ -114,6 +226,25 @@ class MensajeUsuarioController extends Controller
         }
     }
 
+    /**
+     * Eliminar una relación mensaje-usuario
+     *
+     * @group Gestión de Mensajes-Usuario
+     *
+     * @urlParam mensaje_id required El ID del mensaje a eliminar. Example: 1
+     * @urlParam usuario_id required El ID del usuario receptor. Example: 1
+     *
+     * @response 200 {
+     *     "message": "Registro eliminado correctamente."
+     * }
+     * @response 404 {
+     *     "message": "No se encontró el registro para eliminar."
+     * }
+     * @response 500 {
+     *     "error": "Error al eliminar el registro.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     // Eliminar un registro de la tabla mensaje_usuario
     public function destroy($mensaje_id, $usuario_id)
     {

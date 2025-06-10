@@ -1,0 +1,433 @@
+name: 'Gestión de Mensajes'
+description: |-
+
+  APIs para gestionar mensajes en el sistema
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/mensajes
+    metadata:
+      groupName: 'Gestión de Mensajes'
+      groupDescription: |-
+
+        APIs para gestionar mensajes en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar mensajes'
+      description: 'Obtiene una lista de todos los mensajes con información del emisor.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Mensajes obtenidos correctamente.",
+           "data": [
+             {
+               "id": 1,
+               "asunto": "Ejemplo de asunto",
+               "contenido": "Contenido del mensaje",
+               "usuario_id_emisor": 1,
+               "created_at": "2025-06-10T12:00:00Z",
+               "updated_at": "2025-06-10T12:00:00Z",
+               "emisor": {
+                 "id": 1,
+                 "nombre": "Usuario Ejemplo"
+               }
+             }
+           ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al obtener los mensajes.",
+           "message": "Mensaje de error detallado"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/mensajes
+    metadata:
+      groupName: 'Gestión de Mensajes'
+      groupDescription: |-
+
+        APIs para gestionar mensajes en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear mensaje'
+      description: 'Crea un nuevo mensaje en el sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      asunto:
+        name: asunto
+        description: 'El asunto del mensaje.'
+        required: true
+        example: 'Reunión importante'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      contenido:
+        name: contenido
+        description: 'El contenido del mensaje.'
+        required: true
+        example: 'Contenido detallado del mensaje'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_emisor:
+        name: usuario_id_emisor
+        description: 'El ID del usuario que envía el mensaje.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      asunto: 'Reunión importante'
+      contenido: 'Contenido detallado del mensaje'
+      usuario_id_emisor: 1
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+           "message": "Mensaje creado correctamente.",
+           "data": {
+             "id": 1,
+             "asunto": "Reunión importante",
+             "contenido": "Contenido detallado del mensaje",
+             "usuario_id_emisor": 1,
+             "created_at": "2025-06-10T12:00:00Z",
+             "updated_at": "2025-06-10T12:00:00Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+           "error": {
+             "asunto": ["El campo asunto es obligatorio."],
+             "contenido": ["El campo contenido es obligatorio."],
+             "usuario_id_emisor": ["El usuario especificado no existe."]
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/mensajes/{id}'
+    metadata:
+      groupName: 'Gestión de Mensajes'
+      groupDescription: |-
+
+        APIs para gestionar mensajes en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Obtener mensaje específico'
+      description: 'Obtiene la información detallada de un mensaje específico.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del mensaje.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Mensaje obtenido correctamente.",
+           "data": {
+             "id": 1,
+             "asunto": "Ejemplo de asunto",
+             "contenido": "Contenido del mensaje",
+             "usuario_id_emisor": 1,
+             "created_at": "2025-06-10T12:00:00Z",
+             "updated_at": "2025-06-10T12:00:00Z",
+             "emisor": {
+               "id": 1,
+               "nombre": "Usuario Ejemplo"
+             }
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Mensaje no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al obtener el mensaje.",
+           "message": "Mensaje de error detallado"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/mensajes/{id}'
+    metadata:
+      groupName: 'Gestión de Mensajes'
+      groupDescription: |-
+
+        APIs para gestionar mensajes en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar mensaje'
+      description: 'Actualiza la información de un mensaje existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del mensaje a actualizar.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      asunto:
+        name: asunto
+        description: 'El asunto del mensaje.'
+        required: false
+        example: 'Reunión actualizada'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      contenido:
+        name: contenido
+        description: 'El contenido del mensaje.'
+        required: false
+        example: 'Contenido actualizado del mensaje'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_emisor:
+        name: usuario_id_emisor
+        description: 'El ID del usuario que envía el mensaje.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      asunto: 'Reunión actualizada'
+      contenido: 'Contenido actualizado del mensaje'
+      usuario_id_emisor: 1
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Mensaje actualizado correctamente.",
+           "data": {
+             "id": 1,
+             "asunto": "Reunión actualizada",
+             "contenido": "Contenido actualizado del mensaje",
+             "usuario_id_emisor": 1,
+             "created_at": "2025-06-10T12:00:00Z",
+             "updated_at": "2025-06-10T12:00:00Z"
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Mensaje no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+           "error": {
+             "asunto": ["El campo asunto no puede exceder los 255 caracteres."]
+           }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/mensajes/{id}'
+    metadata:
+      groupName: 'Gestión de Mensajes'
+      groupDescription: |-
+
+        APIs para gestionar mensajes en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar mensaje'
+      description: 'Elimina un mensaje específico del sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID del mensaje a eliminar.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+           "message": "Mensaje eliminado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+           "error": "Mensaje no encontrado."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+           "error": "Error al eliminar el mensaje.",
+           "message": "Mensaje de error detallado"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

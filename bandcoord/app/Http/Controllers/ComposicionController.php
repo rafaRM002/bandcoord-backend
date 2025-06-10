@@ -9,9 +9,40 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\ImagesController;
 use Illuminate\Support\Str;
 
+/**
+ * @group Gestión de Composiciones
+ *
+ * APIs para administrar composiciones musicales
+ */
 class ComposicionController extends Controller
 {
-    // Listar todas las composiciones
+    /**
+     * Listar composiciones
+     *
+     * Obtiene una lista de todas las composiciones disponibles.
+     *
+     * @response 200 {
+     *   "message": "Lista de composiciones obtenida correctamente.",
+     *   "data": [
+     *     {
+     *       "id": 1,
+     *       "nombre": "Sinfonía No. 5",
+     *       "descripcion": "Obra maestra de Beethoven",
+     *       "nombre_autor": "Ludwig van Beethoven",
+     *       "ruta": {
+     *         "youtube": "https://www.youtube.com/embed/abc123",
+     *         "files": ["imagen1.jpg", "partitura.pdf"]
+     *       },
+     *       "created_at": "2025-06-10T10:00:00.000000Z",
+     *       "updated_at": "2025-06-10T10:00:00.000000Z"
+     *     }
+     *   ]
+     * }
+     * @response 500 {
+     *   "error": "Hubo un problema al obtener las composiciones.",
+     *   "message": "Error mensaje"
+     * }
+     */
     public function index()
     {
         try {
@@ -28,7 +59,33 @@ class ComposicionController extends Controller
         }
     }
 
-    // Obtener una composición
+    /**
+     * Mostrar composición específica
+     *
+     * Obtiene los detalles de una composición específica por su ID.
+     *
+     * @urlParam id required El ID de la composición. Example: 1
+     *
+     * @response 200 {
+     *   "message": "Composición encontrada correctamente.",
+     *   "data": {
+     *     "id": 1,
+     *     "nombre": "Sinfonía No. 5",
+     *     "descripcion": "Obra maestra de Beethoven",
+     *     "nombre_autor": "Ludwig van Beethoven",
+     *     "ruta": {
+     *       "youtube": "https://www.youtube.com/embed/abc123",
+     *       "files": ["imagen1.jpg", "partitura.pdf"]
+     *     },
+     *     "created_at": "2025-06-10T10:00:00.000000Z",
+     *     "updated_at": "2025-06-10T10:00:00.000000Z"
+     *   }
+     * }
+     * @response 404 {
+     *   "error": "Composición no encontrada.",
+     *   "message": "La composición con el ID 1 no existe."
+     * }
+     */
     public function show($id)
     {
         try {
@@ -50,7 +107,38 @@ class ComposicionController extends Controller
         }
     }
 
-    // Crear una nueva composición
+    /**
+     * Crear composición
+     *
+     * Crea una nueva composición con los datos proporcionados.
+     *
+     * @bodyParam nombre string required Nombre de la composición. Example: Sinfonía No. 5
+     * @bodyParam descripcion string required Descripción de la composición. Example: Obra maestra de Beethoven
+     * @bodyParam nombre_autor string required Nombre del autor de la composición. Example: Ludwig van Beethoven
+     * @bodyParam files array required Array de archivos (imágenes, PDF, audio). Máximo 12 archivos.
+     * @bodyParam iframe string required URL del iframe de YouTube. Example: https://www.youtube.com/embed/abc123
+     *
+     * @response 201 {
+     *   "message": "Composición creada correctamente.",
+     *   "data": {
+     *     "id": 1,
+     *     "nombre": "Sinfonía No. 5",
+     *     "descripcion": "Obra maestra de Beethoven",
+     *     "nombre_autor": "Ludwig van Beethoven",
+     *     "ruta": {
+     *       "youtube": "https://www.youtube.com/embed/abc123",
+     *       "files": ["imagen1.jpg", "partitura.pdf"]
+     *     },
+     *     "created_at": "2025-06-10T10:00:00.000000Z",
+     *     "updated_at": "2025-06-10T10:00:00.000000Z"
+     *   }
+     * }
+     * @response 400 {
+     *   "success": false,
+     *   "message": "Algunas imágenes no se pudieron subir.",
+     *   "errors": ["No se pudo subir la imagen: imagen1.jpg"]
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -114,6 +202,41 @@ class ComposicionController extends Controller
         }
     }
 
+    /**
+     * Actualizar composición
+     *
+     * Actualiza los datos de una composición existente.
+     *
+     * @urlParam id required El ID de la composición. Example: 1
+     * @bodyParam nombre string Nombre de la composición. Example: Sinfonía No. 5
+     * @bodyParam descripcion string Descripción de la composición. Example: Obra maestra de Beethoven
+     * @bodyParam nombre_autor string Nombre del autor. Example: Ludwig van Beethoven
+     * @bodyParam iframe string URL del iframe de YouTube. Example: https://www.youtube.com/embed/abc123
+     * @bodyParam files array Array de nuevos archivos (imágenes, PDF, audio). Máximo 12 archivos.
+     * @bodyParam files_existentes string Lista de nombres de archivos existentes a conservar, separados por punto y coma.
+     *
+     * @response 200 {
+     *   "success": true,
+     *   "message": "Composición actualizada correctamente.",
+     *   "data": {
+     *     "id": 1,
+     *     "nombre": "Sinfonía No. 5",
+     *     "descripcion": "Obra maestra de Beethoven actualizada",
+     *     "nombre_autor": "Ludwig van Beethoven",
+     *     "ruta": {
+     *       "youtube": "https://www.youtube.com/embed/abc123",
+     *       "files": ["imagen1.jpg", "partitura_nueva.pdf"]
+     *     },
+     *     "created_at": "2025-06-10T10:00:00.000000Z",
+     *     "updated_at": "2025-06-10T11:00:00.000000Z"
+     *   }
+     * }
+     * @response 404 {
+     *   "success": false,
+     *   "error": "Composición no encontrada.",
+     *   "message": "La composición con el ID 1 no existe."
+     * }
+     */
     public function update(Request $request, $id){
         try {
             $request->validate([
@@ -214,7 +337,21 @@ class ComposicionController extends Controller
         }
     }
 
-    // Eliminar una composición
+    /**
+     * Eliminar composición
+     *
+     * Elimina una composición existente.
+     *
+     * @urlParam id required El ID de la composición. Example: 1
+     *
+     * @response 200 {
+     *   "message": "Composición eliminada correctamente."
+     * }
+     * @response 404 {
+     *   "error": "Composición no encontrada.",
+     *   "message": "La composición con el ID 1 no existe."
+     * }
+     */
     public function destroy($id)
     {
         try {

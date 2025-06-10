@@ -1,0 +1,5553 @@
+openapi: 3.0.3
+info:
+  title: 'BandCoord API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: 'https://www.iestrassierra.net/alumnado/curso2425/DAW/daw2425a16/laravel'
+tags:
+  -
+    name: 'Gestión de Autenticación'
+    description: "\nAPIs para gestionar la autenticación de usuarios, registro y gestión de perfiles"
+  -
+    name: 'Gestión de Composiciones'
+    description: "\nAPIs para administrar composiciones musicales"
+  -
+    name: 'Gestión de Composiciones de Usuario'
+    description: "\nAPIs para gestionar las relaciones entre composiciones y usuarios"
+  -
+    name: 'Gestión de Entidades'
+    description: "\nAPIs para gestionar entidades en el sistema"
+  -
+    name: 'Gestión de Eventos'
+    description: "\nAPIs para gestionar eventos musicales"
+  -
+    name: 'Gestión de Eventos por Usuario'
+    description: "\nAPIs para gestionar la relación entre eventos y usuarios"
+  -
+    name: 'Gestión de Instrumentos'
+    description: "\nAPIs para gestionar instrumentos musicales"
+  -
+    name: 'Gestión de Mensajes'
+    description: "\nAPIs para gestionar mensajes en el sistema"
+  -
+    name: 'Gestión de Mensajes-Usuario'
+    description: ''
+  -
+    name: 'Gestión de Mínimos por Evento'
+    description: "\nAPIs para gestionar los mínimos de instrumentos requeridos por evento"
+  -
+    name: 'Gestión de Préstamos de Instrumentos'
+    description: "\nAPIs para gestionar los préstamos de instrumentos"
+  -
+    name: 'Gestión de Tipos de Instrumentos'
+    description: "\nAPIs para gestionar los tipos de instrumentos en el sistema"
+  -
+    name: 'Gestión de Usuarios'
+    description: "\nAPIs para gestionar usuarios en el sistema"
+paths:
+  /api/register:
+    post:
+      summary: 'Registrar nuevo usuario'
+      operationId: registrarNuevoUsuario
+      description: 'Registra un nuevo usuario en el sistema.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario registrado correctamente. Esperando aprobación del administrador.'
+                  usuario:
+                    nombre: Juan
+                    apellido1: García
+                    email: juan.garcia@ejemplo.com
+                    estado: pendiente
+                    role: miembro
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario registrado correctamente. Esperando aprobación del administrador.'
+                  usuario:
+                    type: object
+                    properties:
+                      nombre:
+                        type: string
+                        example: Juan
+                      apellido1:
+                        type: string
+                        example: García
+                      email:
+                        type: string
+                        example: juan.garcia@ejemplo.com
+                      estado:
+                        type: string
+                        example: pendiente
+                      role:
+                        type: string
+                        example: miembro
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      id:
+                        type: integer
+                        example: 1
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  errors:
+                    email:
+                      - 'El correo electrónico ya está en uso.'
+                    password:
+                      - 'La contraseña debe tener al menos 8 caracteres.'
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'El correo electrónico ya está en uso.'
+                        items:
+                          type: string
+                      password:
+                        type: array
+                        example:
+                          - 'La contraseña debe tener al menos 8 caracteres.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Autenticación'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre del usuario.'
+                  example: Juan
+                  nullable: false
+                apellido1:
+                  type: string
+                  description: 'Primer apellido del usuario.'
+                  example: García
+                  nullable: false
+                apellido2:
+                  type: string
+                  description: 'opcional Segundo apellido del usuario.'
+                  example: López
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Correo electrónico del usuario.'
+                  example: juan.garcia@ejemplo.com
+                  nullable: false
+                telefono:
+                  type: string
+                  description: 'opcional Número de teléfono del usuario.'
+                  example: '612345678'
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Contraseña del usuario (mínimo 8 caracteres).'
+                  example: password123
+                  nullable: false
+                fecha_nac:
+                  type: date
+                  description: 'opcional Fecha de nacimiento del usuario.'
+                  example: '1990-01-01'
+                  nullable: false
+              required:
+                - nombre
+                - apellido1
+                - email
+                - password
+      security: []
+  /api/login:
+    post:
+      summary: 'Iniciar sesión'
+      operationId: iniciarSesin
+      description: 'Autentifica al usuario y devuelve un token de acceso.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  token: 1|abcdef123456...
+                properties:
+                  token:
+                    type: string
+                    example: 1|abcdef123456...
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Las credenciales son incorrectas.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Las credenciales son incorrectas.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'Tu cuenta está pendiente de aprobación por un administrador.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Tu cuenta está pendiente de aprobación por un administrador.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'El usuario no existe.'
+                properties:
+                  message:
+                    type: string
+                    example: 'El usuario no existe.'
+      tags:
+        - 'Gestión de Autenticación'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Correo electrónico del usuario.'
+                  example: juan.garcia@ejemplo.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Contraseña del usuario.'
+                  example: password123
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: 'Cerrar sesión'
+      operationId: cerrarSesin
+      description: 'Cierra la sesión del usuario actual invalidando el token.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Sesión cerrada correctamente'
+                properties:
+                  message:
+                    type: string
+                    example: 'Sesión cerrada correctamente'
+      tags:
+        - 'Gestión de Autenticación'
+  /api/composiciones:
+    get:
+      summary: 'Listar composiciones'
+      operationId: listarComposiciones
+      description: 'Obtiene una lista de todas las composiciones disponibles.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Lista de composiciones obtenida correctamente.'
+                  data:
+                    -
+                      id: 1
+                      nombre: 'Sinfonía No. 5'
+                      descripcion: 'Obra maestra de Beethoven'
+                      nombre_autor: 'Ludwig van Beethoven'
+                      ruta:
+                        youtube: 'https://www.youtube.com/embed/abc123'
+                        files:
+                          - imagen1.jpg
+                          - partitura.pdf
+                      created_at: '2025-06-10T10:00:00.000000Z'
+                      updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Lista de composiciones obtenida correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        nombre: 'Sinfonía No. 5'
+                        descripcion: 'Obra maestra de Beethoven'
+                        nombre_autor: 'Ludwig van Beethoven'
+                        ruta:
+                          youtube: 'https://www.youtube.com/embed/abc123'
+                          files:
+                            - imagen1.jpg
+                            - partitura.pdf
+                        created_at: '2025-06-10T10:00:00.000000Z'
+                        updated_at: '2025-06-10T10:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        nombre:
+                          type: string
+                          example: 'Sinfonía No. 5'
+                        descripcion:
+                          type: string
+                          example: 'Obra maestra de Beethoven'
+                        nombre_autor:
+                          type: string
+                          example: 'Ludwig van Beethoven'
+                        ruta:
+                          type: object
+                          properties:
+                            youtube:
+                              type: string
+                              example: 'https://www.youtube.com/embed/abc123'
+                            files:
+                              type: array
+                              example:
+                                - imagen1.jpg
+                                - partitura.pdf
+                              items:
+                                type: string
+                        created_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al obtener las composiciones.'
+                  message: 'Error mensaje'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al obtener las composiciones.'
+                  message:
+                    type: string
+                    example: 'Error mensaje'
+      tags:
+        - 'Gestión de Composiciones'
+      security: []
+    post:
+      summary: 'Crear composición'
+      operationId: crearComposicin
+      description: 'Crea una nueva composición con los datos proporcionados.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Composición creada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Sinfonía No. 5'
+                    descripcion: 'Obra maestra de Beethoven'
+                    nombre_autor: 'Ludwig van Beethoven'
+                    ruta:
+                      youtube: 'https://www.youtube.com/embed/abc123'
+                      files:
+                        - imagen1.jpg
+                        - partitura.pdf
+                    created_at: '2025-06-10T10:00:00.000000Z'
+                    updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Composición creada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Sinfonía No. 5'
+                      descripcion:
+                        type: string
+                        example: 'Obra maestra de Beethoven'
+                      nombre_autor:
+                        type: string
+                        example: 'Ludwig van Beethoven'
+                      ruta:
+                        type: object
+                        properties:
+                          youtube:
+                            type: string
+                            example: 'https://www.youtube.com/embed/abc123'
+                          files:
+                            type: array
+                            example:
+                              - imagen1.jpg
+                              - partitura.pdf
+                            items:
+                              type: string
+                      created_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Algunas imágenes no se pudieron subir.'
+                  errors:
+                    - 'No se pudo subir la imagen: imagen1.jpg'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Algunas imágenes no se pudieron subir.'
+                  errors:
+                    type: array
+                    example:
+                      - 'No se pudo subir la imagen: imagen1.jpg'
+                    items:
+                      type: string
+      tags:
+        - 'Gestión de Composiciones'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre de la composición.'
+                  example: 'Sinfonía No. 5'
+                  nullable: false
+                descripcion:
+                  type: string
+                  description: 'Descripción de la composición.'
+                  example: 'Obra maestra de Beethoven'
+                  nullable: false
+                nombre_autor:
+                  type: string
+                  description: 'Nombre del autor de la composición.'
+                  example: 'Ludwig van Beethoven'
+                  nullable: false
+                files:
+                  type: array
+                  description: 'Array de archivos (imágenes, PDF, audio). Máximo 12 archivos.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                iframe:
+                  type: string
+                  description: 'URL del iframe de YouTube.'
+                  example: 'https://www.youtube.com/embed/abc123'
+                  nullable: false
+              required:
+                - nombre
+                - descripcion
+                - nombre_autor
+                - files
+                - iframe
+      security: []
+  '/api/composiciones/{id}':
+    get:
+      summary: 'Mostrar composición específica'
+      operationId: mostrarComposicinEspecfica
+      description: 'Obtiene los detalles de una composición específica por su ID.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Composición encontrada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Sinfonía No. 5'
+                    descripcion: 'Obra maestra de Beethoven'
+                    nombre_autor: 'Ludwig van Beethoven'
+                    ruta:
+                      youtube: 'https://www.youtube.com/embed/abc123'
+                      files:
+                        - imagen1.jpg
+                        - partitura.pdf
+                    created_at: '2025-06-10T10:00:00.000000Z'
+                    updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Composición encontrada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Sinfonía No. 5'
+                      descripcion:
+                        type: string
+                        example: 'Obra maestra de Beethoven'
+                      nombre_autor:
+                        type: string
+                        example: 'Ludwig van Beethoven'
+                      ruta:
+                        type: object
+                        properties:
+                          youtube:
+                            type: string
+                            example: 'https://www.youtube.com/embed/abc123'
+                          files:
+                            type: array
+                            example:
+                              - imagen1.jpg
+                              - partitura.pdf
+                            items:
+                              type: string
+                      created_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Composición no encontrada.'
+                  message: 'La composición con el ID 1 no existe.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Composición no encontrada.'
+                  message:
+                    type: string
+                    example: 'La composición con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Composiciones'
+      security: []
+    put:
+      summary: 'Actualizar composición'
+      operationId: actualizarComposicin
+      description: 'Actualiza los datos de una composición existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Composición actualizada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Sinfonía No. 5'
+                    descripcion: 'Obra maestra de Beethoven actualizada'
+                    nombre_autor: 'Ludwig van Beethoven'
+                    ruta:
+                      youtube: 'https://www.youtube.com/embed/abc123'
+                      files:
+                        - imagen1.jpg
+                        - partitura_nueva.pdf
+                    created_at: '2025-06-10T10:00:00.000000Z'
+                    updated_at: '2025-06-10T11:00:00.000000Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Composición actualizada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Sinfonía No. 5'
+                      descripcion:
+                        type: string
+                        example: 'Obra maestra de Beethoven actualizada'
+                      nombre_autor:
+                        type: string
+                        example: 'Ludwig van Beethoven'
+                      ruta:
+                        type: object
+                        properties:
+                          youtube:
+                            type: string
+                            example: 'https://www.youtube.com/embed/abc123'
+                          files:
+                            type: array
+                            example:
+                              - imagen1.jpg
+                              - partitura_nueva.pdf
+                            items:
+                              type: string
+                      created_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T11:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  error: 'Composición no encontrada.'
+                  message: 'La composición con el ID 1 no existe.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: 'Composición no encontrada.'
+                  message:
+                    type: string
+                    example: 'La composición con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Composiciones'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre de la composición.'
+                  example: 'Sinfonía No. 5'
+                  nullable: false
+                descripcion:
+                  type: string
+                  description: 'Descripción de la composición.'
+                  example: 'Obra maestra de Beethoven'
+                  nullable: false
+                nombre_autor:
+                  type: string
+                  description: 'Nombre del autor.'
+                  example: 'Ludwig van Beethoven'
+                  nullable: false
+                iframe:
+                  type: string
+                  description: 'URL del iframe de YouTube.'
+                  example: 'https://www.youtube.com/embed/abc123'
+                  nullable: false
+                files:
+                  type: array
+                  description: 'Array de nuevos archivos (imágenes, PDF, audio). Máximo 12 archivos.'
+                  example:
+                    - architecto
+                  items:
+                    type: string
+                files_existentes:
+                  type: string
+                  description: 'Lista de nombres de archivos existentes a conservar, separados por punto y coma.'
+                  example: architecto
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar composición'
+      operationId: eliminarComposicin
+      description: 'Elimina una composición existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Composición eliminada correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Composición eliminada correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Composición no encontrada.'
+                  message: 'La composición con el ID 1 no existe.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Composición no encontrada.'
+                  message:
+                    type: string
+                    example: 'La composición con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Composiciones'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID de la composición.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/composicion-usuario:
+    get:
+      summary: 'Listar todas las composiciones-usuario'
+      operationId: listarTodasLasComposicionesUsuario
+      description: 'Obtiene un listado de todas las relaciones entre composiciones y usuarios.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      composicion_id: 1
+                      usuario_id: 1
+                      created_at: '2025-06-10T12:00:00.000000Z'
+                      updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        composicion_id: 1
+                        usuario_id: 1
+                        created_at: '2025-06-10T12:00:00.000000Z'
+                        updated_at: '2025-06-10T12:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        composicion_id:
+                          type: integer
+                          example: 1
+                        usuario_id:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al obtener las composiciones de usuario.'
+                  message: 'Error message'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al obtener las composiciones de usuario.'
+                  message:
+                    type: string
+                    example: 'Error message'
+      tags:
+        - 'Gestión de Composiciones de Usuario'
+      security: []
+    post:
+      summary: 'Crear una nueva composición-usuario'
+      operationId: crearUnaNuevaComposicinUsuario
+      description: 'Crea una nueva relación entre una composición y un usuario.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Composición de usuario creada exitosamente.'
+                  data:
+                    composicion_id: 1
+                    usuario_id: 1
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Composición de usuario creada exitosamente.'
+                  data:
+                    type: object
+                    properties:
+                      composicion_id:
+                        type: integer
+                        example: 1
+                      usuario_id:
+                        type: integer
+                        example: 1
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Esta composición de usuario ya existe.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Esta composición de usuario ya existe.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al crear la composición de usuario.'
+                  message: 'Error message'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al crear la composición de usuario.'
+                  message:
+                    type: string
+                    example: 'Error message'
+      tags:
+        - 'Gestión de Composiciones de Usuario'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                composicion_id:
+                  type: integer
+                  description: 'ID de la composición.'
+                  example: 1
+                  nullable: false
+                usuario_id:
+                  type: integer
+                  description: 'ID del usuario.'
+                  example: 1
+                  nullable: false
+              required:
+                - composicion_id
+                - usuario_id
+      security: []
+  '/api/composicion-usuario/{composicion_id}/{usuario_id}':
+    get:
+      summary: 'Obtener una composición-usuario específica'
+      operationId: obtenerUnaComposicinUsuarioEspecfica
+      description: 'Recupera la información de una relación específica entre composición y usuario.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  composicion_id: 1
+                  usuario_id: 1
+                  created_at: '2025-06-10T12:00:00.000000Z'
+                  updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  composicion_id:
+                    type: integer
+                    example: 1
+                  usuario_id:
+                    type: integer
+                    example: 1
+                  created_at:
+                    type: string
+                    example: '2025-06-10T12:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2025-06-10T12:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Composición de usuario no encontrada.'
+                  message: 'No se encontró una relación entre composición y usuario con esos IDs.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Composición de usuario no encontrada.'
+                  message:
+                    type: string
+                    example: 'No se encontró una relación entre composición y usuario con esos IDs.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al obtener la composición de usuario.'
+                  message: 'Error message'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al obtener la composición de usuario.'
+                  message:
+                    type: string
+                    example: 'Error message'
+      tags:
+        - 'Gestión de Composiciones de Usuario'
+      security: []
+    delete:
+      summary: 'Eliminar una composición-usuario'
+      operationId: eliminarUnaComposicinUsuario
+      description: 'Elimina una relación existente entre una composición y un usuario.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registro eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Registro eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el registro para eliminar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el registro para eliminar.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al eliminar la composición de usuario.'
+                  message: 'Error message'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al eliminar la composición de usuario.'
+                  message:
+                    type: string
+                    example: 'Error message'
+      tags:
+        - 'Gestión de Composiciones de Usuario'
+      security: []
+    parameters:
+      -
+        in: path
+        name: composicion_id
+        description: 'ID de la composición.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: usuario_id
+        description: 'ID del usuario.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/entidades:
+    get:
+      summary: 'Listar entidades'
+      operationId: listarEntidades
+      description: 'Obtiene una lista de todas las entidades registradas en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Lista de entidades obtenida correctamente.'
+                  data:
+                    -
+                      id: 1
+                      nombre: 'Hermandad Example'
+                      tipo: hermandad
+                      persona_contacto: 'Juan Pérez'
+                      telefono: '123456789'
+                      email_contacto: contacto@hermandad.com
+                      created_at: '2025-06-10T12:00:00.000000Z'
+                      updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Lista de entidades obtenida correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        nombre: 'Hermandad Example'
+                        tipo: hermandad
+                        persona_contacto: 'Juan Pérez'
+                        telefono: '123456789'
+                        email_contacto: contacto@hermandad.com
+                        created_at: '2025-06-10T12:00:00.000000Z'
+                        updated_at: '2025-06-10T12:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        nombre:
+                          type: string
+                          example: 'Hermandad Example'
+                        tipo:
+                          type: string
+                          example: hermandad
+                        persona_contacto:
+                          type: string
+                          example: 'Juan Pérez'
+                        telefono:
+                          type: string
+                          example: '123456789'
+                        email_contacto:
+                          type: string
+                          example: contacto@hermandad.com
+                        created_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener las entidades.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener las entidades.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Entidades'
+      security: []
+    post:
+      summary: 'Crear entidad'
+      operationId: crearEntidad
+      description: 'Crea una nueva entidad con los datos proporcionados.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Entidad creada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Hermandad Example'
+                    tipo: hermandad
+                    persona_contacto: 'Juan Pérez'
+                    telefono: '123456789'
+                    email_contacto: contacto@hermandad.com
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Entidad creada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Hermandad Example'
+                      tipo:
+                        type: string
+                        example: hermandad
+                      persona_contacto:
+                        type: string
+                        example: 'Juan Pérez'
+                      telefono:
+                        type: string
+                        example: '123456789'
+                      email_contacto:
+                        type: string
+                        example: contacto@hermandad.com
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    nombre:
+                      - 'El campo nombre es obligatorio.'
+                    tipo:
+                      - 'El campo tipo debe ser hermandad, ayuntamiento u otro.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      nombre:
+                        type: array
+                        example:
+                          - 'El campo nombre es obligatorio.'
+                        items:
+                          type: string
+                      tipo:
+                        type: array
+                        example:
+                          - 'El campo tipo debe ser hermandad, ayuntamiento u otro.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al crear la entidad.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al crear la entidad.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Entidades'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre de la entidad.'
+                  example: 'Hermandad Example'
+                  nullable: false
+                tipo:
+                  type: string
+                  description: 'Tipo de entidad (hermandad/ayuntamiento/otro).'
+                  example: hermandad
+                  nullable: false
+                persona_contacto:
+                  type: string
+                  description: 'Nombre de la persona de contacto.'
+                  example: 'Juan Pérez'
+                  nullable: false
+                telefono:
+                  type: string
+                  description: 'Número de teléfono de contacto.'
+                  example: '123456789'
+                  nullable: false
+                email_contacto:
+                  type: string
+                  description: 'Email de contacto.'
+                  example: contacto@hermandad.com
+                  nullable: false
+              required:
+                - nombre
+                - tipo
+                - persona_contacto
+                - telefono
+                - email_contacto
+      security: []
+  '/api/entidades/{id}':
+    get:
+      summary: 'Obtener entidad específica'
+      operationId: obtenerEntidadEspecfica
+      description: 'Recupera la información de una entidad específica por su ID.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Entidad encontrada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Hermandad Example'
+                    tipo: hermandad
+                    persona_contacto: 'Juan Pérez'
+                    telefono: '123456789'
+                    email_contacto: contacto@hermandad.com
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Entidad encontrada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Hermandad Example'
+                      tipo:
+                        type: string
+                        example: hermandad
+                      persona_contacto:
+                        type: string
+                        example: 'Juan Pérez'
+                      telefono:
+                        type: string
+                        example: '123456789'
+                      email_contacto:
+                        type: string
+                        example: contacto@hermandad.com
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Entidad no encontrada.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Entidad no encontrada.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener la entidad.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener la entidad.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Entidades'
+      security: []
+    put:
+      summary: 'Actualizar entidad'
+      operationId: actualizarEntidad
+      description: 'Actualiza la información de una entidad existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Entidad actualizada correctamente.'
+                  data:
+                    id: 1
+                    nombre: 'Hermandad Example'
+                    tipo: hermandad
+                    persona_contacto: 'Juan Pérez'
+                    telefono: '123456789'
+                    email_contacto: contacto@hermandad.com
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Entidad actualizada correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Hermandad Example'
+                      tipo:
+                        type: string
+                        example: hermandad
+                      persona_contacto:
+                        type: string
+                        example: 'Juan Pérez'
+                      telefono:
+                        type: string
+                        example: '123456789'
+                      email_contacto:
+                        type: string
+                        example: contacto@hermandad.com
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Entidad no encontrada.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Entidad no encontrada.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    tipo:
+                      - 'El campo tipo debe ser hermandad, ayuntamiento u otro.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      tipo:
+                        type: array
+                        example:
+                          - 'El campo tipo debe ser hermandad, ayuntamiento u otro.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al actualizar la entidad.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al actualizar la entidad.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Entidades'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre de la entidad.'
+                  example: 'Hermandad Example'
+                  nullable: false
+                tipo:
+                  type: string
+                  description: 'Tipo de entidad (hermandad/ayuntamiento/otro).'
+                  example: hermandad
+                  nullable: false
+                persona_contacto:
+                  type: string
+                  description: 'Nombre de la persona de contacto.'
+                  example: 'Juan Pérez'
+                  nullable: false
+                telefono:
+                  type: string
+                  description: 'Número de teléfono de contacto.'
+                  example: '123456789'
+                  nullable: false
+                email_contacto:
+                  type: string
+                  description: 'Email de contacto.'
+                  example: contacto@hermandad.com
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar entidad'
+      operationId: eliminarEntidad
+      description: 'Elimina una entidad específica del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Entidad eliminada correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Entidad eliminada correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Entidad no encontrada.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Entidad no encontrada.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar la entidad.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar la entidad.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Entidades'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID de la entidad.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/eventos:
+    get:
+      summary: 'Listar todos los eventos'
+      operationId: listarTodosLosEventos
+      description: 'Obtiene una lista de todos los eventos registrados en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Eventos obtenidos correctamente.'
+                  eventos:
+                    -
+                      id: 1
+                      nombre: 'Ensayo General'
+                      fecha: '2025-06-15'
+                      lugar: 'Sala de Ensayos Principal'
+                      hora: '19:00'
+                      estado: planificado
+                      tipo: ensayo
+                      entidad_id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Eventos obtenidos correctamente.'
+                  eventos:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        nombre: 'Ensayo General'
+                        fecha: '2025-06-15'
+                        lugar: 'Sala de Ensayos Principal'
+                        hora: '19:00'
+                        estado: planificado
+                        tipo: ensayo
+                        entidad_id: 1
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        nombre:
+                          type: string
+                          example: 'Ensayo General'
+                        fecha:
+                          type: string
+                          example: '2025-06-15'
+                        lugar:
+                          type: string
+                          example: 'Sala de Ensayos Principal'
+                        hora:
+                          type: string
+                          example: '19:00'
+                        estado:
+                          type: string
+                          example: planificado
+                        tipo:
+                          type: string
+                          example: ensayo
+                        entidad_id:
+                          type: integer
+                          example: 1
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Hubo un problema al obtener los eventos.'
+                  message: 'Error message here'
+                properties:
+                  error:
+                    type: string
+                    example: 'Hubo un problema al obtener los eventos.'
+                  message:
+                    type: string
+                    example: 'Error message here'
+      tags:
+        - 'Gestión de Eventos'
+      security: []
+    post:
+      summary: 'Crear un nuevo evento'
+      operationId: crearUnNuevoEvento
+      description: 'Crea un nuevo evento con los datos proporcionados.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento creado correctamente.'
+                  evento:
+                    id: 1
+                    nombre: 'Ensayo General'
+                    fecha: '2025-06-15'
+                    lugar: 'Sala de Ensayos Principal'
+                    hora: '19:00'
+                    estado: planificado
+                    tipo: ensayo
+                    entidad_id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento creado correctamente.'
+                  evento:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Ensayo General'
+                      fecha:
+                        type: string
+                        example: '2025-06-15'
+                      lugar:
+                        type: string
+                        example: 'Sala de Ensayos Principal'
+                      hora:
+                        type: string
+                        example: '19:00'
+                      estado:
+                        type: string
+                        example: planificado
+                      tipo:
+                        type: string
+                        example: ensayo
+                      entidad_id:
+                        type: integer
+                        example: 1
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    nombre:
+                      - 'El campo nombre es obligatorio.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      nombre:
+                        type: array
+                        example:
+                          - 'El campo nombre es obligatorio.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Eventos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre del evento.'
+                  example: 'Ensayo General'
+                  nullable: false
+                fecha:
+                  type: date
+                  description: 'Fecha del evento (Y-m-d).'
+                  example: '2025-06-15'
+                  nullable: false
+                lugar:
+                  type: string
+                  description: 'Lugar donde se realizará el evento.'
+                  example: 'Sala de Ensayos Principal'
+                  nullable: false
+                hora:
+                  type: string
+                  description: 'Hora del evento (H:i).'
+                  example: '19:00'
+                  nullable: false
+                estado:
+                  type: string
+                  description: 'Estado del evento (planificado, en progreso, finalizado).'
+                  example: planificado
+                  nullable: false
+                tipo:
+                  type: string
+                  description: 'Tipo de evento (ensayo, procesion, concierto, pasacalles).'
+                  example: ensayo
+                  nullable: false
+                entidad_id:
+                  type: integer
+                  description: 'ID de la entidad asociada.'
+                  example: 1
+                  nullable: false
+              required:
+                - nombre
+                - fecha
+                - lugar
+                - hora
+                - estado
+                - tipo
+                - entidad_id
+      security: []
+  '/api/eventos/{id}':
+    get:
+      summary: 'Obtener un evento específico'
+      operationId: obtenerUnEventoEspecfico
+      description: 'Muestra la información detallada de un evento específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento obtenido correctamente.'
+                  evento:
+                    id: 1
+                    nombre: 'Ensayo General'
+                    fecha: '2025-06-15'
+                    lugar: 'Sala de Ensayos Principal'
+                    hora: '19:00'
+                    estado: planificado
+                    tipo: ensayo
+                    entidad_id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento obtenido correctamente.'
+                  evento:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Ensayo General'
+                      fecha:
+                        type: string
+                        example: '2025-06-15'
+                      lugar:
+                        type: string
+                        example: 'Sala de Ensayos Principal'
+                      hora:
+                        type: string
+                        example: '19:00'
+                      estado:
+                        type: string
+                        example: planificado
+                      tipo:
+                        type: string
+                        example: ensayo
+                      entidad_id:
+                        type: integer
+                        example: 1
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Evento no encontrado.'
+                  message: 'El evento con el ID 1 no existe.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Evento no encontrado.'
+                  message:
+                    type: string
+                    example: 'El evento con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Eventos'
+      security: []
+    put:
+      summary: 'Actualizar un evento'
+      operationId: actualizarUnEvento
+      description: 'Actualiza la información de un evento existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento actualizado correctamente.'
+                  evento:
+                    id: 1
+                    nombre: 'Ensayo General Actualizado'
+                    fecha: '2025-06-16'
+                    lugar: 'Sala de Ensayos Secundaria'
+                    hora: '20:00'
+                    estado: 'en progreso'
+                    tipo: ensayo
+                    entidad_id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento actualizado correctamente.'
+                  evento:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: 'Ensayo General Actualizado'
+                      fecha:
+                        type: string
+                        example: '2025-06-16'
+                      lugar:
+                        type: string
+                        example: 'Sala de Ensayos Secundaria'
+                      hora:
+                        type: string
+                        example: '20:00'
+                      estado:
+                        type: string
+                        example: 'en progreso'
+                      tipo:
+                        type: string
+                        example: ensayo
+                      entidad_id:
+                        type: integer
+                        example: 1
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Evento no encontrado.'
+                  message: 'El evento con el ID 1 no existe.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Evento no encontrado.'
+                  message:
+                    type: string
+                    example: 'El evento con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Eventos'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre del evento.'
+                  example: 'Ensayo General Actualizado'
+                  nullable: false
+                fecha:
+                  type: date
+                  description: 'Fecha del evento (Y-m-d).'
+                  example: '2025-06-16'
+                  nullable: false
+                lugar:
+                  type: string
+                  description: 'Lugar donde se realizará el evento.'
+                  example: 'Sala de Ensayos Secundaria'
+                  nullable: false
+                hora:
+                  type: string
+                  description: 'Hora del evento (H:i).'
+                  example: '20:00'
+                  nullable: false
+                estado:
+                  type: string
+                  description: 'Estado del evento (planificado, en progreso, finalizado).'
+                  example: 'en progreso'
+                  nullable: false
+                tipo:
+                  type: string
+                  description: 'Tipo de evento (ensayo, procesion, concierto, pasacalles).'
+                  example: ensayo
+                  nullable: false
+                entidad_id:
+                  type: integer
+                  description: 'ID de la entidad asociada.'
+                  example: 1
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar un evento'
+      operationId: eliminarUnEvento
+      description: 'Elimina un evento específico del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Evento no encontrado.'
+                  message: 'El evento con el ID 1 no existe.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Evento no encontrado.'
+                  message:
+                    type: string
+                    example: 'El evento con el ID 1 no existe.'
+      tags:
+        - 'Gestión de Eventos'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del evento.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/evento-usuario:
+    get:
+      summary: 'Listar eventos por usuario'
+      operationId: listarEventosPorUsuario
+      description: 'Obtiene un listado de todas las relaciones entre eventos y usuarios.'
+      parameters: []
+      responses:
+        200:
+          description: Éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Listado de eventos por usuario obtenido correctamente.'
+                  data:
+                    -
+                      evento_id: 1
+                      usuario_id: 1
+                      confirmacion: true
+                      created_at: '2025-06-10T12:00:00.000000Z'
+                      updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Listado de eventos por usuario obtenido correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        evento_id: 1
+                        usuario_id: 1
+                        confirmacion: true
+                        created_at: '2025-06-10T12:00:00.000000Z'
+                        updated_at: '2025-06-10T12:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        evento_id:
+                          type: integer
+                          example: 1
+                        usuario_id:
+                          type: integer
+                          example: 1
+                        confirmacion:
+                          type: boolean
+                          example: true
+                        created_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los eventos de usuarios.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los eventos de usuarios.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Eventos por Usuario'
+      security: []
+    post:
+      summary: 'Crear evento por usuario'
+      operationId: crearEventoPorUsuario
+      description: 'Registra un nuevo evento-usuario en el sistema.'
+      parameters: []
+      responses:
+        201:
+          description: Creado
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento de usuario creado correctamente.'
+                  data:
+                    evento_id: 1
+                    usuario_id: 1
+                    confirmacion: true
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento de usuario creado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: integer
+                        example: 1
+                      usuario_id:
+                        type: integer
+                        example: 1
+                      confirmacion:
+                        type: boolean
+                        example: true
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        400:
+          description: 'Usuario ya registrado'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'El usuario ya está registrado para este evento.'
+                properties:
+                  error:
+                    type: string
+                    example: 'El usuario ya está registrado para este evento.'
+        422:
+          description: 'Error de validación'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    evento_id:
+                      - 'El evento_id es requerido.'
+                    usuario_id:
+                      - 'El usuario_id es requerido.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: array
+                        example:
+                          - 'El evento_id es requerido.'
+                        items:
+                          type: string
+                      usuario_id:
+                        type: array
+                        example:
+                          - 'El usuario_id es requerido.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Eventos por Usuario'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evento_id:
+                  type: integer
+                  description: 'ID del evento.'
+                  example: 1
+                  nullable: false
+                usuario_id:
+                  type: integer
+                  description: 'ID del usuario.'
+                  example: 1
+                  nullable: false
+                confirmacion:
+                  type: boolean
+                  description: 'optional Estado de confirmación del usuario.'
+                  example: true
+                  nullable: false
+              required:
+                - evento_id
+                - usuario_id
+      security: []
+  '/api/evento-usuario/{evento_id}/{usuario_id}':
+    get:
+      summary: 'Mostrar evento por usuario específico'
+      operationId: mostrarEventoPorUsuarioEspecfico
+      description: 'Obtiene los detalles de un registro específico de evento-usuario incluyendo la información relacionada.'
+      parameters: []
+      responses:
+        200:
+          description: Éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Evento usuario obtenido correctamente.'
+                  data:
+                    evento_id: 1
+                    usuario_id: 1
+                    confirmacion: true
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                    evento:
+                      id: 1
+                      nombre: 'Ensayo General'
+                      descripcion: 'Ensayo general de la banda'
+                    usuario:
+                      id: 1
+                      nombre: 'Juan Pérez'
+                      email: juan@ejemplo.com
+                properties:
+                  message:
+                    type: string
+                    example: 'Evento usuario obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: integer
+                        example: 1
+                      usuario_id:
+                        type: integer
+                        example: 1
+                      confirmacion:
+                        type: boolean
+                        example: true
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      evento:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          nombre:
+                            type: string
+                            example: 'Ensayo General'
+                          descripcion:
+                            type: string
+                            example: 'Ensayo general de la banda'
+                      usuario:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          nombre:
+                            type: string
+                            example: 'Juan Pérez'
+                          email:
+                            type: string
+                            example: juan@ejemplo.com
+        404:
+          description: 'No encontrado'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Evento usuario no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Evento usuario no encontrado.'
+      tags:
+        - 'Gestión de Eventos por Usuario'
+      security: []
+    put:
+      summary: 'Actualizar confirmación'
+      operationId: actualizarConfirmacin
+      description: 'Actualiza el estado de confirmación de un usuario para un evento específico.'
+      parameters: []
+      responses:
+        200:
+          description: Éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Confirmación actualizada correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Confirmación actualizada correctamente.'
+        404:
+          description: 'No encontrado'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el registro para actualizar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el registro para actualizar.'
+        422:
+          description: 'Error de validación'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    confirmacion:
+                      - 'El campo confirmacion es requerido.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      confirmacion:
+                        type: array
+                        example:
+                          - 'El campo confirmacion es requerido.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Eventos por Usuario'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                confirmacion:
+                  type: boolean
+                  description: 'Nuevo estado de confirmación.'
+                  example: true
+                  nullable: false
+              required:
+                - confirmacion
+      security: []
+    delete:
+      summary: 'Eliminar evento por usuario'
+      operationId: eliminarEventoPorUsuario
+      description: 'Elimina un registro de evento-usuario específico.'
+      parameters: []
+      responses:
+        200:
+          description: Éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registro eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Registro eliminado correctamente.'
+        404:
+          description: 'No encontrado'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el registro para eliminar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el registro para eliminar.'
+      tags:
+        - 'Gestión de Eventos por Usuario'
+      security: []
+    parameters:
+      -
+        in: path
+        name: evento_id
+        description: 'El ID del evento.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: usuario_id
+        description: 'El ID del usuario.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/instrumentos:
+    get:
+      summary: 'Listar todos los instrumentos'
+      operationId: listarTodosLosInstrumentos
+      description: 'Obtiene una lista de todos los instrumentos registrados en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  data:
+                    -
+                      numero_serie: ABC123
+                      estado: disponible
+                      instrumento_tipo_id: Trompeta
+                      created_at: '2025-06-10T10:00:00.000000Z'
+                      updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  data:
+                    type: array
+                    example:
+                      -
+                        numero_serie: ABC123
+                        estado: disponible
+                        instrumento_tipo_id: Trompeta
+                        created_at: '2025-06-10T10:00:00.000000Z'
+                        updated_at: '2025-06-10T10:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        numero_serie:
+                          type: string
+                          example: ABC123
+                        estado:
+                          type: string
+                          example: disponible
+                        instrumento_tipo_id:
+                          type: string
+                          example: Trompeta
+                        created_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener la lista de instrumentos.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener la lista de instrumentos.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Instrumentos'
+      security: []
+    post:
+      summary: 'Crear un nuevo instrumento'
+      operationId: crearUnNuevoInstrumento
+      description: 'Crea un nuevo instrumento con los datos proporcionados.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  numero_serie: ABC123
+                  estado: disponible
+                  instrumento_tipo_id: Trompeta
+                  created_at: '2025-06-10T10:00:00.000000Z'
+                  updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  numero_serie:
+                    type: string
+                    example: ABC123
+                  estado:
+                    type: string
+                    example: disponible
+                  instrumento_tipo_id:
+                    type: string
+                    example: Trompeta
+                  created_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    numero_serie:
+                      - 'El número de serie es obligatorio.'
+                    estado:
+                      - 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.'
+                    instrumento_tipo_id:
+                      - 'El tipo de instrumento es obligatorio.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      numero_serie:
+                        type: array
+                        example:
+                          - 'El número de serie es obligatorio.'
+                        items:
+                          type: string
+                      estado:
+                        type: array
+                        example:
+                          - 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.'
+                        items:
+                          type: string
+                      instrumento_tipo_id:
+                        type: array
+                        example:
+                          - 'El tipo de instrumento es obligatorio.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al crear el instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al crear el instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Instrumentos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numero_serie:
+                  type: string
+                  description: 'El número de serie único del instrumento.'
+                  example: ABC123
+                  nullable: false
+                estado:
+                  type: string
+                  description: 'Estado del instrumento (prestado, disponible, en reparacion).'
+                  example: disponible
+                  nullable: false
+                instrumento_tipo_id:
+                  type: string
+                  description: 'Tipo de instrumento (Trompeta, Fliscorno, Trombon, Bombardino, Tuba, Corneta, Caja, Tambor, other).'
+                  example: Trompeta
+                  nullable: false
+              required:
+                - numero_serie
+                - estado
+                - instrumento_tipo_id
+      security: []
+  '/api/instrumentos/{id}':
+    get:
+      summary: 'Mostrar un instrumento específico'
+      operationId: mostrarUnInstrumentoEspecfico
+      description: 'Obtiene los detalles de un instrumento específico por su número de serie.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  numero_serie: ABC123
+                  estado: disponible
+                  instrumento_tipo_id: Trompeta
+                  created_at: '2025-06-10T10:00:00.000000Z'
+                  updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  numero_serie:
+                    type: string
+                    example: ABC123
+                  estado:
+                    type: string
+                    example: disponible
+                  instrumento_tipo_id:
+                    type: string
+                    example: Trompeta
+                  created_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'El instrumento con este número de serie no existe.'
+                properties:
+                  message:
+                    type: string
+                    example: 'El instrumento con este número de serie no existe.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al buscar el instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al buscar el instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Instrumentos'
+      security: []
+    put:
+      summary: 'Actualizar un instrumento'
+      operationId: actualizarUnInstrumento
+      description: 'Actualiza los datos de un instrumento existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  numero_serie: ABC123
+                  estado: prestado
+                  instrumento_tipo_id: Trompeta
+                  created_at: '2025-06-10T10:00:00.000000Z'
+                  updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  numero_serie:
+                    type: string
+                    example: ABC123
+                  estado:
+                    type: string
+                    example: prestado
+                  instrumento_tipo_id:
+                    type: string
+                    example: Trompeta
+                  created_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2025-06-10T10:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Instrumento no encontrado'
+                properties:
+                  message:
+                    type: string
+                    example: 'Instrumento no encontrado'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    estado:
+                      - 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.'
+                    instrumento_tipo_id:
+                      - 'El tipo de instrumento no es válido.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      estado:
+                        type: array
+                        example:
+                          - 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.'
+                        items:
+                          type: string
+                      instrumento_tipo_id:
+                        type: array
+                        example:
+                          - 'El tipo de instrumento no es válido.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al actualizar el instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al actualizar el instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Instrumentos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: string
+                  description: 'Nuevo estado del instrumento (prestado, disponible, en reparacion).'
+                  example: prestado
+                  nullable: false
+                instrumento_tipo_id:
+                  type: string
+                  description: 'Nuevo tipo de instrumento.'
+                  example: Trompeta
+                  nullable: false
+              required:
+                - estado
+                - instrumento_tipo_id
+      security: []
+    delete:
+      summary: 'Eliminar un instrumento'
+      operationId: eliminarUnInstrumento
+      description: 'Elimina un instrumento específico del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Instrumento eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Instrumento eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'El instrumento con este número de serie no existe.'
+                properties:
+                  message:
+                    type: string
+                    example: 'El instrumento con este número de serie no existe.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar el instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar el instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Instrumentos'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the instrumento.'
+        example: architecto
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: numero_serie
+        description: 'El número de serie del instrumento.'
+        example: ABC123
+        required: true
+        schema:
+          type: string
+  /api/mensajes:
+    get:
+      summary: 'Listar mensajes'
+      operationId: listarMensajes
+      description: 'Obtiene una lista de todos los mensajes con información del emisor.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mensajes obtenidos correctamente.'
+                  data:
+                    -
+                      id: 1
+                      asunto: 'Ejemplo de asunto'
+                      contenido: 'Contenido del mensaje'
+                      usuario_id_emisor: 1
+                      created_at: '2025-06-10T12:00:00Z'
+                      updated_at: '2025-06-10T12:00:00Z'
+                      emisor:
+                        id: 1
+                        nombre: 'Usuario Ejemplo'
+                properties:
+                  message:
+                    type: string
+                    example: 'Mensajes obtenidos correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        asunto: 'Ejemplo de asunto'
+                        contenido: 'Contenido del mensaje'
+                        usuario_id_emisor: 1
+                        created_at: '2025-06-10T12:00:00Z'
+                        updated_at: '2025-06-10T12:00:00Z'
+                        emisor:
+                          id: 1
+                          nombre: 'Usuario Ejemplo'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        asunto:
+                          type: string
+                          example: 'Ejemplo de asunto'
+                        contenido:
+                          type: string
+                          example: 'Contenido del mensaje'
+                        usuario_id_emisor:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          example: '2025-06-10T12:00:00Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T12:00:00Z'
+                        emisor:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            nombre:
+                              type: string
+                              example: 'Usuario Ejemplo'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los mensajes.'
+                  message: 'Mensaje de error detallado'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los mensajes.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error detallado'
+      tags:
+        - 'Gestión de Mensajes'
+      security: []
+    post:
+      summary: 'Crear mensaje'
+      operationId: crearMensaje
+      description: 'Crea un nuevo mensaje en el sistema.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mensaje creado correctamente.'
+                  data:
+                    id: 1
+                    asunto: 'Reunión importante'
+                    contenido: 'Contenido detallado del mensaje'
+                    usuario_id_emisor: 1
+                    created_at: '2025-06-10T12:00:00Z'
+                    updated_at: '2025-06-10T12:00:00Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Mensaje creado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      asunto:
+                        type: string
+                        example: 'Reunión importante'
+                      contenido:
+                        type: string
+                        example: 'Contenido detallado del mensaje'
+                      usuario_id_emisor:
+                        type: integer
+                        example: 1
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    asunto:
+                      - 'El campo asunto es obligatorio.'
+                    contenido:
+                      - 'El campo contenido es obligatorio.'
+                    usuario_id_emisor:
+                      - 'El usuario especificado no existe.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      asunto:
+                        type: array
+                        example:
+                          - 'El campo asunto es obligatorio.'
+                        items:
+                          type: string
+                      contenido:
+                        type: array
+                        example:
+                          - 'El campo contenido es obligatorio.'
+                        items:
+                          type: string
+                      usuario_id_emisor:
+                        type: array
+                        example:
+                          - 'El usuario especificado no existe.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Mensajes'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                asunto:
+                  type: string
+                  description: 'El asunto del mensaje.'
+                  example: 'Reunión importante'
+                  nullable: false
+                contenido:
+                  type: string
+                  description: 'El contenido del mensaje.'
+                  example: 'Contenido detallado del mensaje'
+                  nullable: false
+                usuario_id_emisor:
+                  type: integer
+                  description: 'El ID del usuario que envía el mensaje.'
+                  example: 1
+                  nullable: false
+              required:
+                - asunto
+                - contenido
+                - usuario_id_emisor
+      security: []
+  '/api/mensajes/{id}':
+    get:
+      summary: 'Obtener mensaje específico'
+      operationId: obtenerMensajeEspecfico
+      description: 'Obtiene la información detallada de un mensaje específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mensaje obtenido correctamente.'
+                  data:
+                    id: 1
+                    asunto: 'Ejemplo de asunto'
+                    contenido: 'Contenido del mensaje'
+                    usuario_id_emisor: 1
+                    created_at: '2025-06-10T12:00:00Z'
+                    updated_at: '2025-06-10T12:00:00Z'
+                    emisor:
+                      id: 1
+                      nombre: 'Usuario Ejemplo'
+                properties:
+                  message:
+                    type: string
+                    example: 'Mensaje obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      asunto:
+                        type: string
+                        example: 'Ejemplo de asunto'
+                      contenido:
+                        type: string
+                        example: 'Contenido del mensaje'
+                      usuario_id_emisor:
+                        type: integer
+                        example: 1
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+                      emisor:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          nombre:
+                            type: string
+                            example: 'Usuario Ejemplo'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Mensaje no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Mensaje no encontrado.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener el mensaje.'
+                  message: 'Mensaje de error detallado'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener el mensaje.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error detallado'
+      tags:
+        - 'Gestión de Mensajes'
+      security: []
+    put:
+      summary: 'Actualizar mensaje'
+      operationId: actualizarMensaje
+      description: 'Actualiza la información de un mensaje existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mensaje actualizado correctamente.'
+                  data:
+                    id: 1
+                    asunto: 'Reunión actualizada'
+                    contenido: 'Contenido actualizado del mensaje'
+                    usuario_id_emisor: 1
+                    created_at: '2025-06-10T12:00:00Z'
+                    updated_at: '2025-06-10T12:00:00Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Mensaje actualizado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      asunto:
+                        type: string
+                        example: 'Reunión actualizada'
+                      contenido:
+                        type: string
+                        example: 'Contenido actualizado del mensaje'
+                      usuario_id_emisor:
+                        type: integer
+                        example: 1
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Mensaje no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Mensaje no encontrado.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    asunto:
+                      - 'El campo asunto no puede exceder los 255 caracteres.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      asunto:
+                        type: array
+                        example:
+                          - 'El campo asunto no puede exceder los 255 caracteres.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Mensajes'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                asunto:
+                  type: string
+                  description: 'El asunto del mensaje.'
+                  example: 'Reunión actualizada'
+                  nullable: false
+                contenido:
+                  type: string
+                  description: 'El contenido del mensaje.'
+                  example: 'Contenido actualizado del mensaje'
+                  nullable: false
+                usuario_id_emisor:
+                  type: integer
+                  description: 'El ID del usuario que envía el mensaje.'
+                  example: 1
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar mensaje'
+      operationId: eliminarMensaje
+      description: 'Elimina un mensaje específico del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mensaje eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Mensaje eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Mensaje no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Mensaje no encontrado.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar el mensaje.'
+                  message: 'Mensaje de error detallado'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar el mensaje.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error detallado'
+      tags:
+        - 'Gestión de Mensajes'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del mensaje.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/mensaje-usuarios:
+    get:
+      summary: 'Mostrar lista de todas las relaciones de mensajes de usuarios'
+      operationId: mostrarListaDeTodasLasRelacionesDeMensajesDeUsuarios
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Relaciones de mensajes de usuario listadas exitosamente'
+                  data:
+                    -
+                      mensaje_id: 1
+                      usuario_id_receptor: 1
+                      estado: true
+                      created_at: '2025-06-10T10:00:00.000000Z'
+                      updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Relaciones de mensajes de usuario listadas exitosamente'
+                  data:
+                    type: array
+                    example:
+                      -
+                        mensaje_id: 1
+                        usuario_id_receptor: 1
+                        estado: true
+                        created_at: '2025-06-10T10:00:00.000000Z'
+                        updated_at: '2025-06-10T10:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        mensaje_id:
+                          type: integer
+                          example: 1
+                        usuario_id_receptor:
+                          type: integer
+                          example: 1
+                        estado:
+                          type: boolean
+                          example: true
+                        created_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T10:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al listar relaciones de mensajes de usuario.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al listar relaciones de mensajes de usuario.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mensajes-Usuario'
+      security: []
+    post:
+      summary: 'Crear una nueva relación mensaje-usuario'
+      operationId: crearUnaNuevaRelacinMensajeUsuario
+      description: ''
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Relación de mensaje de usuario creada exitosamente'
+                  data:
+                    mensaje_id: 1
+                    usuario_id_receptor: 1
+                    estado: true
+                    created_at: '2025-06-10T10:00:00.000000Z'
+                    updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Relación de mensaje de usuario creada exitosamente'
+                  data:
+                    type: object
+                    properties:
+                      mensaje_id:
+                        type: integer
+                        example: 1
+                      usuario_id_receptor:
+                        type: integer
+                        example: 1
+                      estado:
+                        type: boolean
+                        example: true
+                      created_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Esta relación de mensaje ya existe.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Esta relación de mensaje ya existe.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    mensaje_id:
+                      - 'El campo mensaje_id es obligatorio.'
+                    usuario_id_receptor:
+                      - 'El campo usuario_id_receptor es obligatorio.'
+                    estado:
+                      - 'El campo estado es obligatorio.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      mensaje_id:
+                        type: array
+                        example:
+                          - 'El campo mensaje_id es obligatorio.'
+                        items:
+                          type: string
+                      usuario_id_receptor:
+                        type: array
+                        example:
+                          - 'El campo usuario_id_receptor es obligatorio.'
+                        items:
+                          type: string
+                      estado:
+                        type: array
+                        example:
+                          - 'El campo estado es obligatorio.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al crear la relación.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al crear la relación.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mensajes-Usuario'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mensaje_id:
+                  type: integer
+                  description: 'ID del mensaje.'
+                  example: 1
+                  nullable: false
+                usuario_id_receptor:
+                  type: integer
+                  description: 'ID del usuario receptor.'
+                  example: 1
+                  nullable: false
+                estado:
+                  type: boolean
+                  description: 'Estado del mensaje.'
+                  example: true
+                  nullable: false
+              required:
+                - mensaje_id
+                - usuario_id_receptor
+                - estado
+      security: []
+  '/api/mensaje-usuarios/{mensaje_id}/{usuario_id_receptor}':
+    get:
+      summary: 'Obtener una relación específica de mensaje-usuario'
+      operationId: obtenerUnaRelacinEspecficaDeMensajeUsuario
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Relación de mensaje de usuario encontrada'
+                  data:
+                    mensaje_id: 1
+                    usuario_id_receptor: 1
+                    estado: true
+                    created_at: '2025-06-10T10:00:00.000000Z'
+                    updated_at: '2025-06-10T10:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Relación de mensaje de usuario encontrada'
+                  data:
+                    type: object
+                    properties:
+                      mensaje_id:
+                        type: integer
+                        example: 1
+                      usuario_id_receptor:
+                        type: integer
+                        example: 1
+                      estado:
+                        type: boolean
+                        example: true
+                      created_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T10:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Relación de mensaje de usuario no encontrada.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Relación de mensaje de usuario no encontrada.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener la relación.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener la relación.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mensajes-Usuario'
+      security: []
+    put:
+      summary: 'Actualizar el estado de una relación mensaje-usuario'
+      operationId: actualizarElEstadoDeUnaRelacinMensajeUsuario
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Estado actualizado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Estado actualizado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró la relación.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró la relación.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    estado:
+                      - 'El campo estado es obligatorio.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      estado:
+                        type: array
+                        example:
+                          - 'El campo estado es obligatorio.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al actualizar el estado.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al actualizar el estado.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mensajes-Usuario'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                estado:
+                  type: boolean
+                  description: 'Nuevo estado del mensaje.'
+                  example: true
+                  nullable: false
+              required:
+                - estado
+      security: []
+    delete:
+      summary: 'Eliminar una relación mensaje-usuario'
+      operationId: eliminarUnaRelacinMensajeUsuario
+      description: ''
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registro eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Registro eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el registro para eliminar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el registro para eliminar.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar el registro.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar el registro.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mensajes-Usuario'
+      security: []
+    parameters:
+      -
+        in: path
+        name: mensaje_id
+        description: 'El ID del mensaje.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: usuario_id_receptor
+        description: 'El ID del usuario receptor.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/minimos-evento:
+    get:
+      summary: 'Listar Mínimos por Evento'
+      operationId: listarMnimosPorEvento
+      description: 'Obtiene un listado de todos los mínimos de instrumentos requeridos por cada evento.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Listado de mínimos por evento obtenido correctamente.'
+                  data:
+                    -
+                      evento_id: 1
+                      instrumento_tipo_id: GUITARRA
+                      cantidad: 2
+                      evento:
+                        id: 1
+                        nombre: 'Concierto Example'
+                      tipoInstrumento:
+                        instrumento: GUITARRA
+                        nombre: Guitarra
+                properties:
+                  message:
+                    type: string
+                    example: 'Listado de mínimos por evento obtenido correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        evento_id: 1
+                        instrumento_tipo_id: GUITARRA
+                        cantidad: 2
+                        evento:
+                          id: 1
+                          nombre: 'Concierto Example'
+                        tipoInstrumento:
+                          instrumento: GUITARRA
+                          nombre: Guitarra
+                    items:
+                      type: object
+                      properties:
+                        evento_id:
+                          type: integer
+                          example: 1
+                        instrumento_tipo_id:
+                          type: string
+                          example: GUITARRA
+                        cantidad:
+                          type: integer
+                          example: 2
+                        evento:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            nombre:
+                              type: string
+                              example: 'Concierto Example'
+                        tipoInstrumento:
+                          type: object
+                          properties:
+                            instrumento:
+                              type: string
+                              example: GUITARRA
+                            nombre:
+                              type: string
+                              example: Guitarra
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los mínimos por evento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los mínimos por evento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Mínimos por Evento'
+      security: []
+    post:
+      summary: 'Crear Mínimo por Evento'
+      operationId: crearMnimoPorEvento
+      description: 'Crea un nuevo registro de mínimo de instrumentos requeridos para un evento.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mínimo de instrumento creado correctamente.'
+                  data:
+                    evento_id: 1
+                    instrumento_tipo_id: GUITARRA
+                    cantidad: 2
+                properties:
+                  message:
+                    type: string
+                    example: 'Mínimo de instrumento creado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: integer
+                        example: 1
+                      instrumento_tipo_id:
+                        type: string
+                        example: GUITARRA
+                      cantidad:
+                        type: integer
+                        example: 2
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    evento_id:
+                      - 'El evento seleccionado no existe.'
+                    instrumento_tipo_id:
+                      - 'El tipo de instrumento ya existe para este evento.'
+                    cantidad:
+                      - 'La cantidad debe ser al menos 1.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: array
+                        example:
+                          - 'El evento seleccionado no existe.'
+                        items:
+                          type: string
+                      instrumento_tipo_id:
+                        type: array
+                        example:
+                          - 'El tipo de instrumento ya existe para este evento.'
+                        items:
+                          type: string
+                      cantidad:
+                        type: array
+                        example:
+                          - 'La cantidad debe ser al menos 1.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Mínimos por Evento'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                evento_id:
+                  type: integer
+                  description: 'ID del evento.'
+                  example: 1
+                  nullable: false
+                instrumento_tipo_id:
+                  type: string
+                  description: 'ID del tipo de instrumento.'
+                  example: GUITARRA
+                  nullable: false
+                cantidad:
+                  type: integer
+                  description: 'Cantidad mínima requerida del instrumento. Mínimo: 1.'
+                  example: 2
+                  nullable: false
+              required:
+                - evento_id
+                - instrumento_tipo_id
+                - cantidad
+      security: []
+  '/api/minimos-evento/{evento_id}/{instrumento_tipo_id}':
+    get:
+      summary: 'Obtener Mínimo Específico'
+      operationId: obtenerMnimoEspecfico
+      description: 'Obtiene el detalle de un mínimo de instrumento específico para un evento.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Mínimo de instrumento obtenido correctamente.'
+                  data:
+                    evento_id: 1
+                    instrumento_tipo_id: GUITARRA
+                    cantidad: 2
+                    evento:
+                      id: 1
+                      nombre: 'Concierto Example'
+                    tipoInstrumento:
+                      instrumento: GUITARRA
+                      nombre: Guitarra
+                properties:
+                  message:
+                    type: string
+                    example: 'Mínimo de instrumento obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      evento_id:
+                        type: integer
+                        example: 1
+                      instrumento_tipo_id:
+                        type: string
+                        example: GUITARRA
+                      cantidad:
+                        type: integer
+                        example: 2
+                      evento:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          nombre:
+                            type: string
+                            example: 'Concierto Example'
+                      tipoInstrumento:
+                        type: object
+                        properties:
+                          instrumento:
+                            type: string
+                            example: GUITARRA
+                          nombre:
+                            type: string
+                            example: Guitarra
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Mínimo de instrumento no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Mínimo de instrumento no encontrado.'
+      tags:
+        - 'Gestión de Mínimos por Evento'
+      security: []
+    put:
+      summary: 'Actualizar Mínimo por Evento'
+      operationId: actualizarMnimoPorEvento
+      description: 'Actualiza la cantidad mínima requerida de un instrumento para un evento específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registro actualizado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Registro actualizado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el registro para actualizar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el registro para actualizar.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    cantidad:
+                      - 'La cantidad debe ser al menos 1.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      cantidad:
+                        type: array
+                        example:
+                          - 'La cantidad debe ser al menos 1.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Mínimos por Evento'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cantidad:
+                  type: integer
+                  description: 'Nueva cantidad mínima requerida. Mínimo: 1.'
+                  example: 3
+                  nullable: false
+              required:
+                - cantidad
+      security: []
+    delete:
+      summary: 'Eliminar Mínimo por Evento'
+      operationId: eliminarMnimoPorEvento
+      description: 'Elimina un registro de mínimo de instrumentos requeridos para un evento.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Registro eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Registro eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Registro no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Registro no encontrado.'
+      tags:
+        - 'Gestión de Mínimos por Evento'
+      security: []
+    parameters:
+      -
+        in: path
+        name: evento_id
+        description: 'ID del evento.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+      -
+        in: path
+        name: instrumento_tipo_id
+        description: 'ID del tipo de instrumento.'
+        example: GUITARRA
+        required: true
+        schema:
+          type: string
+  /api/prestamos:
+    get:
+      summary: 'Listar préstamos'
+      operationId: listarPrstamos
+      description: 'Obtiene una lista de todos los préstamos de instrumentos con sus relaciones.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Listado de préstamos obtenido correctamente.'
+                  data:
+                    -
+                      num_serie: 123ABC
+                      usuario_id: 1
+                      fecha_prestamo: '2025-06-10'
+                      fecha_devolucion: null
+                      instrumento:
+                        numero_serie: 123ABC
+                        nombre: 'Guitarra Eléctrica'
+                        estado: prestado
+                      usuario:
+                        id: 1
+                        nombre: 'Juan Pérez'
+                properties:
+                  message:
+                    type: string
+                    example: 'Listado de préstamos obtenido correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        num_serie: 123ABC
+                        usuario_id: 1
+                        fecha_prestamo: '2025-06-10'
+                        fecha_devolucion: null
+                        instrumento:
+                          numero_serie: 123ABC
+                          nombre: 'Guitarra Eléctrica'
+                          estado: prestado
+                        usuario:
+                          id: 1
+                          nombre: 'Juan Pérez'
+                    items:
+                      type: object
+                      properties:
+                        num_serie:
+                          type: string
+                          example: 123ABC
+                        usuario_id:
+                          type: integer
+                          example: 1
+                        fecha_prestamo:
+                          type: string
+                          example: '2025-06-10'
+                        fecha_devolucion:
+                          type: string
+                          example: null
+                        instrumento:
+                          type: object
+                          properties:
+                            numero_serie:
+                              type: string
+                              example: 123ABC
+                            nombre:
+                              type: string
+                              example: 'Guitarra Eléctrica'
+                            estado:
+                              type: string
+                              example: prestado
+                        usuario:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            nombre:
+                              type: string
+                              example: 'Juan Pérez'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los préstamos.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los préstamos.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Préstamos de Instrumentos'
+      security: []
+    post:
+      summary: 'Crear préstamo'
+      operationId: crearPrstamo
+      description: 'Crea un nuevo préstamo de instrumento y actualiza el estado del instrumento.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Préstamo creado correctamente.'
+                  data:
+                    num_serie: 123ABC
+                    usuario_id: 1
+                    fecha_prestamo: '2025-06-10'
+                    fecha_devolucion: null
+                properties:
+                  message:
+                    type: string
+                    example: 'Préstamo creado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      num_serie:
+                        type: string
+                        example: 123ABC
+                      usuario_id:
+                        type: integer
+                        example: 1
+                      fecha_prestamo:
+                        type: string
+                        example: '2025-06-10'
+                      fecha_devolucion:
+                        type: string
+                        example: null
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      error: 'El instrumento no está disponible para préstamo.'
+                    properties:
+                      error:
+                        type: string
+                        example: 'El instrumento no está disponible para préstamo.'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      error: 'Este usuario ya tiene un préstamo activo para este instrumento.'
+                    properties:
+                      error:
+                        type: string
+                        example: 'Este usuario ya tiene un préstamo activo para este instrumento.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Instrumento no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Instrumento no encontrado.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    num_serie:
+                      - 'El número de serie es obligatorio.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      num_serie:
+                        type: array
+                        example:
+                          - 'El número de serie es obligatorio.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Préstamos de Instrumentos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                num_serie:
+                  type: string
+                  description: 'Número de serie del instrumento.'
+                  example: 123ABC
+                  nullable: false
+                usuario_id:
+                  type: integer
+                  description: 'ID del usuario que solicita el préstamo.'
+                  example: 1
+                  nullable: false
+                fecha_prestamo:
+                  type: date
+                  description: 'Fecha del préstamo.'
+                  example: '2025-06-10'
+                  nullable: false
+                fecha_devolucion:
+                  type: date
+                  description: 'opcional Fecha de devolución programada.'
+                  example: '2025-06-17'
+                  nullable: false
+              required:
+                - num_serie
+                - usuario_id
+                - fecha_prestamo
+      security: []
+  '/api/prestamos/{num_serie}/{usuario_id}':
+    get:
+      summary: 'Mostrar préstamo específico'
+      operationId: mostrarPrstamoEspecfico
+      description: 'Obtiene los detalles de un préstamo específico por número de serie y ID de usuario.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Préstamo obtenido correctamente.'
+                  data:
+                    num_serie: 123ABC
+                    usuario_id: 1
+                    fecha_prestamo: '2025-06-10'
+                    fecha_devolucion: null
+                    instrumento:
+                      numero_serie: 123ABC
+                      nombre: 'Guitarra Eléctrica'
+                      estado: prestado
+                    usuario:
+                      id: 1
+                      nombre: 'Juan Pérez'
+                properties:
+                  message:
+                    type: string
+                    example: 'Préstamo obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      num_serie:
+                        type: string
+                        example: 123ABC
+                      usuario_id:
+                        type: integer
+                        example: 1
+                      fecha_prestamo:
+                        type: string
+                        example: '2025-06-10'
+                      fecha_devolucion:
+                        type: string
+                        example: null
+                      instrumento:
+                        type: object
+                        properties:
+                          numero_serie:
+                            type: string
+                            example: 123ABC
+                          nombre:
+                            type: string
+                            example: 'Guitarra Eléctrica'
+                          estado:
+                            type: string
+                            example: prestado
+                      usuario:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          nombre:
+                            type: string
+                            example: 'Juan Pérez'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Préstamo no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Préstamo no encontrado.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener el préstamo.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener el préstamo.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Préstamos de Instrumentos'
+      security: []
+    put:
+      summary: 'Actualizar préstamo'
+      operationId: actualizarPrstamo
+      description: 'Actualiza las fechas de un préstamo existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Préstamo actualizado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Préstamo actualizado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'No se encontró el préstamo para actualizar.'
+                properties:
+                  message:
+                    type: string
+                    example: 'No se encontró el préstamo para actualizar.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error:
+                    fecha_prestamo:
+                      - 'La fecha de préstamo es obligatoria.'
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      fecha_prestamo:
+                        type: array
+                        example:
+                          - 'La fecha de préstamo es obligatoria.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Préstamos de Instrumentos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fecha_prestamo:
+                  type: date
+                  description: 'Nueva fecha de préstamo.'
+                  example: '2025-06-10'
+                  nullable: false
+                fecha_devolucion:
+                  type: date
+                  description: 'Nueva fecha de devolución.'
+                  example: '2025-06-17'
+                  nullable: false
+              required:
+                - fecha_prestamo
+                - fecha_devolucion
+      security: []
+    delete:
+      summary: 'Eliminar préstamo'
+      operationId: eliminarPrstamo
+      description: 'Elimina un préstamo existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Préstamo eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Préstamo eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Préstamo no encontrado para eliminar.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Préstamo no encontrado para eliminar.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar el préstamo.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar el préstamo.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Préstamos de Instrumentos'
+      security: []
+    parameters:
+      -
+        in: path
+        name: num_serie
+        description: 'El número de serie del instrumento.'
+        example: 123ABC
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: usuario_id
+        description: 'El ID del usuario.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  /api/tipo-instrumentos:
+    get:
+      summary: 'Listar todos los tipos de instrumentos'
+      operationId: listarTodosLosTiposDeInstrumentos
+      description: 'Obtiene una lista de todos los tipos de instrumentos disponibles en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tipos de instrumentos obtenidos correctamente.'
+                  data:
+                    -
+                      id: 1
+                      instrumento: Guitarra
+                      cantidad: 5
+                      created_at: '2025-06-10T12:00:00.000000Z'
+                      updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tipos de instrumentos obtenidos correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        instrumento: Guitarra
+                        cantidad: 5
+                        created_at: '2025-06-10T12:00:00.000000Z'
+                        updated_at: '2025-06-10T12:00:00.000000Z'
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        instrumento:
+                          type: string
+                          example: Guitarra
+                        cantidad:
+                          type: integer
+                          example: 5
+                        created_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+                        updated_at:
+                          type: string
+                          example: '2025-06-10T12:00:00.000000Z'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los tipos de instrumentos.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los tipos de instrumentos.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Tipos de Instrumentos'
+      security: []
+    post:
+      summary: 'Crear un nuevo tipo de instrumento'
+      operationId: crearUnNuevoTipoDeInstrumento
+      description: 'Crea un nuevo tipo de instrumento con los datos proporcionados.'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tipo de instrumento creado correctamente.'
+                  data:
+                    id: 2
+                    instrumento: Violín
+                    cantidad: 3
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tipo de instrumento creado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 2
+                      instrumento:
+                        type: string
+                        example: Violín
+                      cantidad:
+                        type: integer
+                        example: 3
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Datos de entrada inválidos.'
+                  details:
+                    instrumento:
+                      - 'El instrumento ya existe.'
+                    cantidad:
+                      - 'La cantidad debe ser al menos 1.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Datos de entrada inválidos.'
+                  details:
+                    type: object
+                    properties:
+                      instrumento:
+                        type: array
+                        example:
+                          - 'El instrumento ya existe.'
+                        items:
+                          type: string
+                      cantidad:
+                        type: array
+                        example:
+                          - 'La cantidad debe ser al menos 1.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al crear el tipo de instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al crear el tipo de instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Tipos de Instrumentos'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instrumento:
+                  type: string
+                  description: 'Nombre del instrumento.'
+                  example: Violín
+                  nullable: false
+                cantidad:
+                  type: integer
+                  description: 'Cantidad disponible del instrumento.'
+                  example: 3
+                  nullable: false
+              required:
+                - instrumento
+                - cantidad
+      security: []
+  '/api/tipo-instrumentos/{id}':
+    get:
+      summary: 'Obtener un tipo de instrumento específico'
+      operationId: obtenerUnTipoDeInstrumentoEspecfico
+      description: 'Muestra la información detallada de un tipo de instrumento específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tipo de instrumento obtenido correctamente.'
+                  data:
+                    id: 1
+                    instrumento: Guitarra
+                    cantidad: 5
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tipo de instrumento obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      instrumento:
+                        type: string
+                        example: Guitarra
+                      cantidad:
+                        type: integer
+                        example: 5
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Tipo de instrumento no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Tipo de instrumento no encontrado.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener el tipo de instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener el tipo de instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Tipos de Instrumentos'
+      security: []
+    put:
+      summary: 'Actualizar un tipo de instrumento existente'
+      operationId: actualizarUnTipoDeInstrumentoExistente
+      description: 'Actualiza los datos de un tipo de instrumento específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tipo de instrumento actualizado correctamente.'
+                  data:
+                    id: 1
+                    instrumento: 'Guitarra Eléctrica'
+                    cantidad: 4
+                    created_at: '2025-06-10T12:00:00.000000Z'
+                    updated_at: '2025-06-10T12:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tipo de instrumento actualizado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      instrumento:
+                        type: string
+                        example: 'Guitarra Eléctrica'
+                      cantidad:
+                        type: integer
+                        example: 4
+                      created_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-06-10T12:00:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Tipo de instrumento no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Tipo de instrumento no encontrado.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Datos de entrada inválidos.'
+                  details:
+                    instrumento:
+                      - 'El instrumento ya existe.'
+                    cantidad:
+                      - 'La cantidad debe ser al menos 1.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Datos de entrada inválidos.'
+                  details:
+                    type: object
+                    properties:
+                      instrumento:
+                        type: array
+                        example:
+                          - 'El instrumento ya existe.'
+                        items:
+                          type: string
+                      cantidad:
+                        type: array
+                        example:
+                          - 'La cantidad debe ser al menos 1.'
+                        items:
+                          type: string
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al actualizar el tipo de instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al actualizar el tipo de instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Tipos de Instrumentos'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instrumento:
+                  type: string
+                  description: 'El nombre del instrumento.'
+                  example: 'Guitarra Eléctrica'
+                  nullable: false
+                cantidad:
+                  type: integer
+                  description: 'La cantidad disponible del instrumento.'
+                  example: 4
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar un tipo de instrumento'
+      operationId: eliminarUnTipoDeInstrumento
+      description: 'Elimina un tipo de instrumento específico del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Tipo de instrumento eliminado correctamente.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Tipo de instrumento eliminado correctamente.'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Tipo de instrumento no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Tipo de instrumento no encontrado.'
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al eliminar el tipo de instrumento.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al eliminar el tipo de instrumento.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Tipos de Instrumentos'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del tipo de instrumento.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  /api/mailTo:
+    post:
+      summary: 'Enviar correo personalizado'
+      operationId: enviarCorreoPersonalizado
+      description: 'Envía un correo electrónico personalizado a un usuario.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: 'Correo enviado correctamente con vista personalizada'
+                properties:
+                  success:
+                    type: string
+                    example: 'Correo enviado correctamente con vista personalizada'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Datos inválidos'
+                  messages:
+                    email:
+                      - 'El campo email es obligatorio.'
+                    mensaje:
+                      - 'El campo mensaje es obligatorio.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Datos inválidos'
+                  messages:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'El campo email es obligatorio.'
+                        items:
+                          type: string
+                      mensaje:
+                        type: array
+                        example:
+                          - 'El campo mensaje es obligatorio.'
+                        items:
+                          type: string
+      tags:
+        - 'Gestión de Usuarios'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Email del destinatario.'
+                  example: usuario@ejemplo.com
+                  nullable: false
+                mensaje:
+                  type: string
+                  description: 'Contenido del mensaje (máximo 1000 caracteres).'
+                  example: 'Este es un mensaje personalizado.'
+                  nullable: false
+              required:
+                - email
+                - mensaje
+      security: []
+  /api/usuarios:
+    get:
+      summary: 'Listar usuarios'
+      operationId: listarUsuarios
+      description: 'Obtiene una lista de todos los usuarios registrados en el sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuarios obtenidos correctamente.'
+                  data:
+                    -
+                      id: 1
+                      nombre: Juan
+                      apellido1: Pérez
+                      apellido2: García
+                      telefono: '123456789'
+                      email: juan@ejemplo.com
+                      estado: activo
+                      fecha_nac: '1990-01-01'
+                      fecha_entrada: '2023-01-01'
+                      role: miembro
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuarios obtenidos correctamente.'
+                  data:
+                    type: array
+                    example:
+                      -
+                        id: 1
+                        nombre: Juan
+                        apellido1: Pérez
+                        apellido2: García
+                        telefono: '123456789'
+                        email: juan@ejemplo.com
+                        estado: activo
+                        fecha_nac: '1990-01-01'
+                        fecha_entrada: '2023-01-01'
+                        role: miembro
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        nombre:
+                          type: string
+                          example: Juan
+                        apellido1:
+                          type: string
+                          example: Pérez
+                        apellido2:
+                          type: string
+                          example: García
+                        telefono:
+                          type: string
+                          example: '123456789'
+                        email:
+                          type: string
+                          example: juan@ejemplo.com
+                        estado:
+                          type: string
+                          example: activo
+                        fecha_nac:
+                          type: string
+                          example: '1990-01-01'
+                        fecha_entrada:
+                          type: string
+                          example: '2023-01-01'
+                        role:
+                          type: string
+                          example: miembro
+        500:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Error al obtener los usuarios.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Error al obtener los usuarios.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Usuarios'
+      security: []
+  '/api/usuarios/{id}':
+    get:
+      summary: 'Mostrar usuario'
+      operationId: mostrarUsuario
+      description: 'Muestra la información de un usuario específico.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario obtenido correctamente.'
+                  data:
+                    id: 1
+                    nombre: Juan
+                    apellido1: Pérez
+                    apellido2: García
+                    telefono: '123456789'
+                    email: juan@ejemplo.com
+                    estado: activo
+                    fecha_nac: '1990-01-01'
+                    fecha_entrada: '2023-01-01'
+                    role: miembro
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario obtenido correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: Juan
+                      apellido1:
+                        type: string
+                        example: Pérez
+                      apellido2:
+                        type: string
+                        example: García
+                      telefono:
+                        type: string
+                        example: '123456789'
+                      email:
+                        type: string
+                        example: juan@ejemplo.com
+                      estado:
+                        type: string
+                        example: activo
+                      fecha_nac:
+                        type: string
+                        example: '1990-01-01'
+                      fecha_entrada:
+                        type: string
+                        example: '2023-01-01'
+                      role:
+                        type: string
+                        example: miembro
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Usuario no encontrado.'
+                  message: 'Mensaje de error específico'
+                properties:
+                  error:
+                    type: string
+                    example: 'Usuario no encontrado.'
+                  message:
+                    type: string
+                    example: 'Mensaje de error específico'
+      tags:
+        - 'Gestión de Usuarios'
+      security: []
+    put:
+      summary: 'Actualizar usuario'
+      operationId: actualizarUsuario
+      description: 'Actualiza la información de un usuario existente.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario actualizado correctamente.'
+                  data:
+                    id: 1
+                    nombre: Juan
+                    apellido1: Pérez
+                    apellido2: García
+                    telefono: '123456789'
+                    email: juan@ejemplo.com
+                    estado: activo
+                    fecha_nac: '1990-01-01'
+                    fecha_entrada: '2023-01-01'
+                    role: miembro
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario actualizado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      nombre:
+                        type: string
+                        example: Juan
+                      apellido1:
+                        type: string
+                        example: Pérez
+                      apellido2:
+                        type: string
+                        example: García
+                      telefono:
+                        type: string
+                        example: '123456789'
+                      email:
+                        type: string
+                        example: juan@ejemplo.com
+                      estado:
+                        type: string
+                        example: activo
+                      fecha_nac:
+                        type: string
+                        example: '1990-01-01'
+                      fecha_entrada:
+                        type: string
+                        example: '2023-01-01'
+                      role:
+                        type: string
+                        example: miembro
+      tags:
+        - 'Gestión de Usuarios'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: 'Nombre del usuario.'
+                  example: Juan
+                  nullable: false
+                apellido1:
+                  type: string
+                  description: 'Primer apellido del usuario.'
+                  example: Pérez
+                  nullable: false
+                apellido2:
+                  type: string
+                  description: 'Segundo apellido del usuario.'
+                  example: García
+                  nullable: false
+                telefono:
+                  type: string
+                  description: 'Número de teléfono del usuario.'
+                  example: '123456789'
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Email del usuario.'
+                  example: juan@ejemplo.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Contraseña del usuario (mínimo 6 caracteres).'
+                  example: newpassword123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Confirmación de la contraseña.'
+                  example: newpassword123
+                  nullable: false
+                estado:
+                  type: string
+                  description: 'Estado del usuario (activo/suspendido/bloqueado).'
+                  example: activo
+                  nullable: false
+                fecha_nac:
+                  type: date
+                  description: 'Fecha de nacimiento.'
+                  example: '1990-01-01'
+                  nullable: false
+                fecha_entrada:
+                  type: date
+                  description: 'Fecha de entrada.'
+                  example: '2023-01-01'
+                  nullable: false
+                role:
+                  type: string
+                  description: 'Rol del usuario (admin/miembro).'
+                  example: miembro
+                  nullable: false
+      security: []
+    delete:
+      summary: 'Eliminar usuario'
+      operationId: eliminarUsuario
+      description: 'Elimina un usuario del sistema.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario eliminado correctamente.'
+                  data:
+                    id: 1
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario eliminado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Usuario no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Usuario no encontrado.'
+      tags:
+        - 'Gestión de Usuarios'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del usuario.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  '/api/usuarios/{id}/approve':
+    patch:
+      summary: 'Aprobar usuario'
+      operationId: aprobarUsuario
+      description: "Cambia el estado de un usuario a 'activo'."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario aprobado correctamente.'
+                  data:
+                    id: 1
+                    estado: activo
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario aprobado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      estado:
+                        type: string
+                        example: activo
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Usuario no encontrado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Usuario no encontrado.'
+      tags:
+        - 'Gestión de Usuarios'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del usuario.'
+        example: '1'
+        required: true
+        schema:
+          type: string
+  '/api/usuarios/{id}/block':
+    patch:
+      summary: 'Bloquear usuario'
+      operationId: bloquearUsuario
+      description: "Cambia el estado de un usuario a 'bloqueado'."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Usuario bloqueado correctamente.'
+                  data:
+                    id: 1
+                    estado: bloqueado
+                properties:
+                  message:
+                    type: string
+                    example: 'Usuario bloqueado correctamente.'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      estado:
+                        type: string
+                        example: bloqueado
+        400:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  error: 'Este usuario ya está bloqueado.'
+                properties:
+                  error:
+                    type: string
+                    example: 'Este usuario ya está bloqueado.'
+      tags:
+        - 'Gestión de Usuarios'
+      security: []
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'El ID del usuario.'
+        example: '1'
+        required: true
+        schema:
+          type: string

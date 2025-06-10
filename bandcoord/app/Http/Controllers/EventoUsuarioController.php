@@ -9,9 +9,35 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Gestión de Eventos por Usuario
+ *
+ * APIs para gestionar la relación entre eventos y usuarios
+ */
 class EventoUsuarioController extends Controller
 {
-    // Listar todos los eventos de usuarios
+    /**
+     * Listar eventos por usuario
+     *
+     * Obtiene un listado de todas las relaciones entre eventos y usuarios.
+     *
+     * @response status=200 scenario="Éxito" {
+     *   "message": "Listado de eventos por usuario obtenido correctamente.",
+     *   "data": [
+     *     {
+     *       "evento_id": 1,
+     *       "usuario_id": 1,
+     *       "confirmacion": true,
+     *       "created_at": "2025-06-10T12:00:00.000000Z",
+     *       "updated_at": "2025-06-10T12:00:00.000000Z"
+     *     }
+     *   ]
+     * }
+     * @response status=500 scenario="Error" {
+     *   "error": "Error al obtener los eventos de usuarios.",
+     *   "message": "Mensaje de error específico"
+     * }
+     */
     public function index()
     {
         try {
@@ -24,7 +50,38 @@ class EventoUsuarioController extends Controller
         }
     }
 
-    // Obtener un evento_usuario específico
+    /**
+     * Mostrar evento por usuario específico
+     *
+     * Obtiene los detalles de un registro específico de evento-usuario incluyendo la información relacionada.
+     *
+     * @urlParam evento_id required El ID del evento. Example: 1
+     * @urlParam usuario_id required El ID del usuario. Example: 1
+     *
+     * @response status=200 scenario="Éxito" {
+     *   "message": "Evento usuario obtenido correctamente.",
+     *   "data": {
+     *     "evento_id": 1,
+     *     "usuario_id": 1,
+     *     "confirmacion": true,
+     *     "created_at": "2025-06-10T12:00:00.000000Z",
+     *     "updated_at": "2025-06-10T12:00:00.000000Z",
+     *     "evento": {
+     *       "id": 1,
+     *       "nombre": "Ensayo General",
+     *       "descripcion": "Ensayo general de la banda"
+     *     },
+     *     "usuario": {
+     *       "id": 1,
+     *       "nombre": "Juan Pérez",
+     *       "email": "juan@ejemplo.com"
+     *     }
+     *   }
+     * }
+     * @response status=404 scenario="No encontrado" {
+     *   "error": "Evento usuario no encontrado."
+     * }
+     */
     public function show($evento_id, $usuario_id)
     {
         try {
@@ -44,7 +101,35 @@ class EventoUsuarioController extends Controller
         }
     }
 
-    // Crear un nuevo evento de usuario
+    /**
+     * Crear evento por usuario
+     *
+     * Registra un nuevo evento-usuario en el sistema.
+     *
+     * @bodyParam evento_id integer required ID del evento. Example: 1
+     * @bodyParam usuario_id integer required ID del usuario. Example: 1
+     * @bodyParam confirmacion boolean optional Estado de confirmación del usuario. Example: true
+     *
+     * @response status=201 scenario="Creado" {
+     *   "message": "Evento de usuario creado correctamente.",
+     *   "data": {
+     *     "evento_id": 1,
+     *     "usuario_id": 1,
+     *     "confirmacion": true,
+     *     "created_at": "2025-06-10T12:00:00.000000Z",
+     *     "updated_at": "2025-06-10T12:00:00.000000Z"
+     *   }
+     * }
+     * @response status=400 scenario="Usuario ya registrado" {
+     *   "error": "El usuario ya está registrado para este evento."
+     * }
+     * @response status=422 scenario="Error de validación" {
+     *   "error": {
+     *     "evento_id": ["El evento_id es requerido."],
+     *     "usuario_id": ["El usuario_id es requerido."]
+     *   }
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -75,7 +160,27 @@ class EventoUsuarioController extends Controller
         }
     }
 
-    // Actualizar la confirmación de asistencia de un usuario a un evento
+    /**
+     * Actualizar confirmación
+     *
+     * Actualiza el estado de confirmación de un usuario para un evento específico.
+     *
+     * @urlParam evento_id required ID del evento. Example: 1
+     * @urlParam usuario_id required ID del usuario. Example: 1
+     * @bodyParam confirmacion boolean required Nuevo estado de confirmación. Example: true
+     *
+     * @response status=200 scenario="Éxito" {
+     *   "message": "Confirmación actualizada correctamente."
+     * }
+     * @response status=404 scenario="No encontrado" {
+     *   "message": "No se encontró el registro para actualizar."
+     * }
+     * @response status=422 scenario="Error de validación" {
+     *   "error": {
+     *     "confirmacion": ["El campo confirmacion es requerido."]
+     *   }
+     * }
+     */
     public function update(Request $request, $evento_id, $usuario_id)
     {
         try {
@@ -109,7 +214,21 @@ class EventoUsuarioController extends Controller
         }
     }
 
-    // Eliminar un registro evento_usuario
+    /**
+     * Eliminar evento por usuario
+     *
+     * Elimina un registro de evento-usuario específico.
+     *
+     * @urlParam evento_id required ID del evento. Example: 1
+     * @urlParam usuario_id required ID del usuario. Example: 1
+     *
+     * @response status=200 scenario="Éxito" {
+     *   "message": "Registro eliminado correctamente."
+     * }
+     * @response status=404 scenario="No encontrado" {
+     *   "message": "No se encontró el registro para eliminar."
+     * }
+     */
     public function destroy($evento_id, $usuario_id)
     {
         try {

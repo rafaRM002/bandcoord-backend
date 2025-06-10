@@ -27,75 +27,117 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * @group Autenticación
+ * Endpoints para registro y autenticación de usuarios
+ */
 // RUTAS PÚBLICAS
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/mailTo', [UsuarioController::class, 'enviarCorreoPersonalizado']);;
+Route::post('/register', [AuthController::class, 'register']); // @description Registra un nuevo usuario
+Route::post('/login', [AuthController::class, 'login']); // @description Inicia sesión de usuario
+Route::post('/mailTo', [UsuarioController::class, 'enviarCorreoPersonalizado']); // @description Envía un correo personalizado
 
 // RUTAS PROTEGIDAS
 Route::middleware('auth:sanctum')->group(function () {
 
-    // CERRAR SESIÓN
-    Route::post('/logout', [AuthController::class, 'logout']);
+    /**
+     * @group Autenticación
+     */
+    Route::post('/logout', [AuthController::class, 'logout']); // @description Cierra la sesión del usuario
 
-    // USUARIOS
+    /**
+     * @group Gestión de Usuarios
+     * @middleware isAdmin
+     */
     Route::middleware('isAdmin')->group(function () {
-        Route::get('usuarios', [UsuarioController::class, 'index']); //Listar todos los usuaarios
-        Route::get('usuarios/{id}', [UsuarioController::class, 'show']); //Mostrar usuario concreto
-        Route::put('usuarios/{id}', [UsuarioController::class, 'update']); //Modificar usuario concreto
-        Route::delete('usuarios/{id}', [UsuarioController::class, 'destroy']); //Eliminar usuario concreto
-        Route::patch('usuarios/{id}/approve', [UsuarioController::class, 'approveUser']); //Activar un usuario
-        Route::patch('usuarios/{id}/block', [UsuarioController::class, 'blockUser']); //Bloquear un usuario
+        Route::get('usuarios', [UsuarioController::class, 'index']); // @description Lista todos los usuarios
+        Route::get('usuarios/{id}', [UsuarioController::class, 'show']); // @description Muestra un usuario específico
+        Route::put('usuarios/{id}', [UsuarioController::class, 'update']); // @description Actualiza un usuario específico
+        Route::delete('usuarios/{id}', [UsuarioController::class, 'destroy']); // @description Elimina un usuario específico
+        Route::patch('usuarios/{id}/approve', [UsuarioController::class, 'approveUser']); // @description Activa un usuario
+        Route::patch('usuarios/{id}/block', [UsuarioController::class, 'blockUser']); // @description Bloquea un usuario
     });
-    // Obtener el usuario autenticado
+
+    /**
+     * @group Perfil de Usuario
+     */
     Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
         return $request->user();
-    });
+    }); // @description Obtiene el perfil del usuario autenticado
 
-    // INSTRUMENTOS
+    /**
+     * @group Gestión de Instrumentos
+     * @middleware isAdmin
+     */
     Route::apiResource('instrumentos', InstrumentoController::class)->middleware('isAdmin');
     Route::apiResource('tipo-instrumentos', TipoInstrumentoController::class)->middleware('isAdmin');
 
-    // EVENTOS
+    /**
+     * @group Gestión de Eventos
+     * @middleware isAdmin
+     */
     Route::apiResource('eventos', EventoController::class)->middleware('isAdmin');
 
+    /**
+     * @group Gestión de Mínimos de Evento
+     * @middleware isAdmin
+     */
     Route::middleware('isAdmin')->group(function () {
-        Route::get('minimos-evento', [MinimoEventoController::class, 'index']);
-        Route::post('minimos-evento', [MinimoEventoController::class, 'store']);
-        Route::get('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'show']);
-        Route::put('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'update']);
-        Route::delete('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'destroy']);
+        Route::get('minimos-evento', [MinimoEventoController::class, 'index']); // @description Lista todos los mínimos de evento
+        Route::post('minimos-evento', [MinimoEventoController::class, 'store']); // @description Crea un nuevo mínimo de evento
+        Route::get('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'show']); // @description Muestra un mínimo de evento específico
+        Route::put('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'update']); // @description Actualiza un mínimo de evento
+        Route::delete('minimos-evento/{evento_id}/{instrumento_tipo_id}', [MinimoEventoController::class, 'destroy']); // @description Elimina un mínimo de evento
     });
 
-    Route::get('evento-usuario', [EventoUsuarioController::class, 'index']);
-    Route::post('evento-usuario', [EventoUsuarioController::class, 'store']);
-    Route::get('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'show']);
-    Route::put('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'update']);
-    Route::delete('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'destroy']);
+    /**
+     * @group Gestión de Usuarios en Eventos
+     */
+    Route::get('evento-usuario', [EventoUsuarioController::class, 'index']); // @description Lista todas las asignaciones de usuarios a eventos
+    Route::post('evento-usuario', [EventoUsuarioController::class, 'store']); // @description Asigna un usuario a un evento
+    Route::get('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'show']); // @description Muestra una asignación específica
+    Route::put('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'update']); // @description Actualiza una asignación
+    Route::delete('evento-usuario/{evento_id}/{usuario_id}', [EventoUsuarioController::class, 'destroy']); // @description Elimina una asignación
 
-    // PRESTAMOS
+    /**
+     * @group Gestión de Préstamos
+     * @middleware isAdmin
+     */
     Route::middleware('isAdmin')->group(function () {
-        Route::get('prestamos', [PrestamoInstrumentoController::class, 'index']);
-        Route::post('prestamos', [PrestamoInstrumentoController::class, 'store']);
-        Route::get('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'show']);
-        Route::put('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'update']);
-        Route::delete('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'destroy']);
+        Route::get('prestamos', [PrestamoInstrumentoController::class, 'index']); // @description Lista todos los préstamos
+        Route::post('prestamos', [PrestamoInstrumentoController::class, 'store']); // @description Crea un nuevo préstamo
+        Route::get('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'show']); // @description Muestra un préstamo específico
+        Route::put('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'update']); // @description Actualiza un préstamo
+        Route::delete('prestamos/{num_serie}/{usuario_id}', [PrestamoInstrumentoController::class, 'destroy']); // @description Elimina un préstamo
     });
 
-    // ENTIDADES
+    /**
+     * @group Gestión de Entidades
+     * @middleware isAdmin
+     */
     Route::apiResource('entidades', EntidadController::class)->middleware('isAdmin');
 
-    // COMPOSICIONES
+    /**
+     * @group Gestión de Composiciones
+     * @middleware isAdmin
+     */
     Route::apiResource('composiciones', ComposicionController::class)->middleware('isAdmin');
 
-    Route::get('composicion-usuario', [ComposicionUsuarioController::class, 'index']);
+    /**
+     * @group Gestión de Usuarios en Composiciones
+     */
+    Route::get('composicion-usuario', [ComposicionUsuarioController::class, 'index']); // @description Lista todas las asignaciones de usuarios a composiciones
     Route::post('composicion-usuario', [ComposicionUsuarioController::class, 'store']);
     Route::get('composicion-usuario/{composicion_id}/{usuario_id}', [ComposicionUsuarioController::class, 'show']);
     Route::delete('composicion-usuario/{composicion_id}/{usuario_id}', [ComposicionUsuarioController::class, 'destroy']);
 
-    // MENSAJES
+    /**
+     * @group Gestión de Mensajes
+     */
     Route::apiResource('mensajes', MensajeController::class);
 
+    /**
+     * @group Gestión de Mensajes a Usuarios
+     */
     Route::get('mensaje-usuarios', [MensajeUsuarioController::class, 'index']);
     Route::get('mensaje-usuarios/{mensaje_id}/{usuario_id_receptor}', [MensajeUsuarioController::class, 'show']);
     Route::post('mensaje-usuarios', [MensajeUsuarioController::class, 'store']);

@@ -7,9 +7,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+/**
+ * @group Gestión de Composiciones de Usuario
+ *
+ * APIs para gestionar las relaciones entre composiciones y usuarios
+ */
 class ComposicionUsuarioController extends Controller
 {
-    // Listar todas las composiciones-usuario
+    /**
+     * Listar todas las composiciones-usuario
+     *
+     * Obtiene un listado de todas las relaciones entre composiciones y usuarios.
+     *
+     * @response 200 {
+     *  "data": [
+     *    {
+     *      "composicion_id": 1,
+     *      "usuario_id": 1,
+     *      "created_at": "2025-06-10T12:00:00.000000Z",
+     *      "updated_at": "2025-06-10T12:00:00.000000Z"
+     *    }
+     *  ]
+     * }
+     * @response 500 {
+     *  "error": "Hubo un problema al obtener las composiciones de usuario.",
+     *  "message": "Error message"
+     * }
+     */
     public function index()
     {
         try {
@@ -23,7 +47,29 @@ class ComposicionUsuarioController extends Controller
         }
     }
 
-    // Obtener una composicion-usuario
+    /**
+     * Obtener una composición-usuario específica
+     *
+     * Recupera la información de una relación específica entre composición y usuario.
+     *
+     * @urlParam composicion_id integer required ID de la composición. Example: 1
+     * @urlParam usuario_id integer required ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "composicion_id": 1,
+     *  "usuario_id": 1,
+     *  "created_at": "2025-06-10T12:00:00.000000Z",
+     *  "updated_at": "2025-06-10T12:00:00.000000Z"
+     * }
+     * @response 404 {
+     *  "error": "Composición de usuario no encontrada.",
+     *  "message": "No se encontró una relación entre composición y usuario con esos IDs."
+     * }
+     * @response 500 {
+     *  "error": "Hubo un problema al obtener la composición de usuario.",
+     *  "message": "Error message"
+     * }
+     */
     public function show($composicion_id, $usuario_id)
     {
         try {
@@ -47,7 +93,31 @@ class ComposicionUsuarioController extends Controller
         }
     }
 
-    // Crear una nueva composicion-usuario
+    /**
+     * Crear una nueva composición-usuario
+     *
+     * Crea una nueva relación entre una composición y un usuario.
+     *
+     * @bodyParam composicion_id integer required ID de la composición. Example: 1
+     * @bodyParam usuario_id integer required ID del usuario. Example: 1
+     *
+     * @response 201 {
+     *  "message": "Composición de usuario creada exitosamente.",
+     *  "data": {
+     *    "composicion_id": 1,
+     *    "usuario_id": 1,
+     *    "created_at": "2025-06-10T12:00:00.000000Z",
+     *    "updated_at": "2025-06-10T12:00:00.000000Z"
+     *  }
+     * }
+     * @response 409 {
+     *  "message": "Esta composición de usuario ya existe."
+     * }
+     * @response 500 {
+     *  "error": "Hubo un problema al crear la composición de usuario.",
+     *  "message": "Error message"
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -80,7 +150,18 @@ class ComposicionUsuarioController extends Controller
         }
     }
 
-    // Actualizar una composicion-usuario existente
+    /**
+     * Actualizar una composición-usuario
+     *
+     * Este endpoint no está implementado ya que no hay datos actualizables.
+     *
+     * @urlParam composicion_id integer required ID de la composición. Example: 1
+     * @urlParam usuario_id integer required ID del usuario. Example: 1
+     *
+     * @response 501 {
+     *  "message": "Este método no está implementado porque no hay datos actualizables."
+     * }
+     */
     public function update(Request $request, $composicion_id, $usuario_id)
     {
         // No implementado
@@ -89,7 +170,25 @@ class ComposicionUsuarioController extends Controller
         ], 501); // 501 Not Implemented
     }
 
-    // Eliminar una composicion_usuario
+    /**
+     * Eliminar una composición-usuario
+     *
+     * Elimina una relación existente entre una composición y un usuario.
+     *
+     * @urlParam composicion_id integer required ID de la composición. Example: 1
+     * @urlParam usuario_id integer required ID del usuario. Example: 1
+     *
+     * @response 200 {
+     *  "message": "Registro eliminado correctamente."
+     * }
+     * @response 404 {
+     *  "message": "No se encontró el registro para eliminar."
+     * }
+     * @response 500 {
+     *  "error": "Hubo un problema al eliminar la composición de usuario.",
+     *  "message": "Error message"
+     * }
+     */
     public function destroy($composicion_id, $usuario_id)
     {
         try {

@@ -1,0 +1,452 @@
+name: 'Gestión de Mensajes-Usuario'
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/mensaje-usuarios
+    metadata:
+      groupName: 'Gestión de Mensajes-Usuario'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Mostrar lista de todas las relaciones de mensajes de usuarios'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Relaciones de mensajes de usuario listadas exitosamente",
+              "data": [
+                  {
+                      "mensaje_id": 1,
+                      "usuario_id_receptor": 1,
+                      "estado": true,
+                      "created_at": "2025-06-10T10:00:00.000000Z",
+                      "updated_at": "2025-06-10T10:00:00.000000Z"
+                  }
+              ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al listar relaciones de mensajes de usuario.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/mensaje-usuarios/{mensaje_id}/{usuario_id_receptor}'
+    metadata:
+      groupName: 'Gestión de Mensajes-Usuario'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Obtener una relación específica de mensaje-usuario'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      mensaje_id:
+        name: mensaje_id
+        description: 'El ID del mensaje.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_receptor:
+        name: usuario_id_receptor
+        description: 'El ID del usuario receptor.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      mensaje_id: '1'
+      usuario_id_receptor: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Relación de mensaje de usuario encontrada",
+              "data": {
+                  "mensaje_id": 1,
+                  "usuario_id_receptor": 1,
+                  "estado": true,
+                  "created_at": "2025-06-10T10:00:00.000000Z",
+                  "updated_at": "2025-06-10T10:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "Relación de mensaje de usuario no encontrada."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al obtener la relación.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/mensaje-usuarios
+    metadata:
+      groupName: 'Gestión de Mensajes-Usuario'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear una nueva relación mensaje-usuario'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      mensaje_id:
+        name: mensaje_id
+        description: 'ID del mensaje.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_receptor:
+        name: usuario_id_receptor
+        description: 'ID del usuario receptor.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      estado:
+        name: estado
+        description: 'Estado del mensaje.'
+        required: true
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      mensaje_id: 1
+      usuario_id_receptor: 1
+      estado: true
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+              "message": "Relación de mensaje de usuario creada exitosamente",
+              "data": {
+                  "mensaje_id": 1,
+                  "usuario_id_receptor": 1,
+                  "estado": true,
+                  "created_at": "2025-06-10T10:00:00.000000Z",
+                  "updated_at": "2025-06-10T10:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 409
+        content: |-
+          {
+              "message": "Esta relación de mensaje ya existe."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "error": {
+                  "mensaje_id": ["El campo mensaje_id es obligatorio."],
+                  "usuario_id_receptor": ["El campo usuario_id_receptor es obligatorio."],
+                  "estado": ["El campo estado es obligatorio."]
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al crear la relación.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/mensaje-usuarios/{mensaje_id}/{usuario_id_receptor}'
+    metadata:
+      groupName: 'Gestión de Mensajes-Usuario'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar el estado de una relación mensaje-usuario'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      mensaje_id:
+        name: mensaje_id
+        description: 'El ID del mensaje.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_receptor:
+        name: usuario_id_receptor
+        description: 'El ID del usuario receptor.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      mensaje_id: '1'
+      usuario_id_receptor: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      estado:
+        name: estado
+        description: 'Nuevo estado del mensaje.'
+        required: true
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      estado: true
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Estado actualizado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No se encontró la relación."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "error": {
+                  "estado": ["El campo estado es obligatorio."]
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al actualizar el estado.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/mensaje-usuarios/{mensaje_id}/{usuario_id_receptor}'
+    metadata:
+      groupName: 'Gestión de Mensajes-Usuario'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar una relación mensaje-usuario'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      mensaje_id:
+        name: mensaje_id
+        description: 'El ID del mensaje a eliminar.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id_receptor:
+        name: usuario_id_receptor
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      usuario_id:
+        name: usuario_id
+        description: 'El ID del usuario receptor.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      mensaje_id: '1'
+      usuario_id_receptor: architecto
+      usuario_id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Registro eliminado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "message": "No se encontró el registro para eliminar."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al eliminar el registro.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

@@ -1,0 +1,472 @@
+name: 'Gestión de Composiciones'
+description: |-
+
+  APIs para administrar composiciones musicales
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/composiciones
+    metadata:
+      groupName: 'Gestión de Composiciones'
+      groupDescription: |-
+
+        APIs para administrar composiciones musicales
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar composiciones'
+      description: 'Obtiene una lista de todas las composiciones disponibles.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Lista de composiciones obtenida correctamente.",
+            "data": [
+              {
+                "id": 1,
+                "nombre": "Sinfonía No. 5",
+                "descripcion": "Obra maestra de Beethoven",
+                "nombre_autor": "Ludwig van Beethoven",
+                "ruta": {
+                  "youtube": "https://www.youtube.com/embed/abc123",
+                  "files": ["imagen1.jpg", "partitura.pdf"]
+                },
+                "created_at": "2025-06-10T10:00:00.000000Z",
+                "updated_at": "2025-06-10T10:00:00.000000Z"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "error": "Hubo un problema al obtener las composiciones.",
+            "message": "Error mensaje"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/composiciones
+    metadata:
+      groupName: 'Gestión de Composiciones'
+      groupDescription: |-
+
+        APIs para administrar composiciones musicales
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear composición'
+      description: 'Crea una nueva composición con los datos proporcionados.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        name: nombre
+        description: 'Nombre de la composición.'
+        required: true
+        example: 'Sinfonía No. 5'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      descripcion:
+        name: descripcion
+        description: 'Descripción de la composición.'
+        required: true
+        example: 'Obra maestra de Beethoven'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      nombre_autor:
+        name: nombre_autor
+        description: 'Nombre del autor de la composición.'
+        required: true
+        example: 'Ludwig van Beethoven'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      files:
+        name: files
+        description: 'Array de archivos (imágenes, PDF, audio). Máximo 12 archivos.'
+        required: true
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      iframe:
+        name: iframe
+        description: 'URL del iframe de YouTube.'
+        required: true
+        example: 'https://www.youtube.com/embed/abc123'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      nombre: 'Sinfonía No. 5'
+      descripcion: 'Obra maestra de Beethoven'
+      nombre_autor: 'Ludwig van Beethoven'
+      files:
+        - architecto
+      iframe: 'https://www.youtube.com/embed/abc123'
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "message": "Composición creada correctamente.",
+            "data": {
+              "id": 1,
+              "nombre": "Sinfonía No. 5",
+              "descripcion": "Obra maestra de Beethoven",
+              "nombre_autor": "Ludwig van Beethoven",
+              "ruta": {
+                "youtube": "https://www.youtube.com/embed/abc123",
+                "files": ["imagen1.jpg", "partitura.pdf"]
+              },
+              "created_at": "2025-06-10T10:00:00.000000Z",
+              "updated_at": "2025-06-10T10:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: |-
+          {
+            "success": false,
+            "message": "Algunas imágenes no se pudieron subir.",
+            "errors": ["No se pudo subir la imagen: imagen1.jpg"]
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/composiciones/{id}'
+    metadata:
+      groupName: 'Gestión de Composiciones'
+      groupDescription: |-
+
+        APIs para administrar composiciones musicales
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Mostrar composición específica'
+      description: 'Obtiene los detalles de una composición específica por su ID.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la composición.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Composición encontrada correctamente.",
+            "data": {
+              "id": 1,
+              "nombre": "Sinfonía No. 5",
+              "descripcion": "Obra maestra de Beethoven",
+              "nombre_autor": "Ludwig van Beethoven",
+              "ruta": {
+                "youtube": "https://www.youtube.com/embed/abc123",
+                "files": ["imagen1.jpg", "partitura.pdf"]
+              },
+              "created_at": "2025-06-10T10:00:00.000000Z",
+              "updated_at": "2025-06-10T10:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "error": "Composición no encontrada.",
+            "message": "La composición con el ID 1 no existe."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/composiciones/{id}'
+    metadata:
+      groupName: 'Gestión de Composiciones'
+      groupDescription: |-
+
+        APIs para administrar composiciones musicales
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar composición'
+      description: 'Actualiza los datos de una composición existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la composición.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        name: nombre
+        description: 'Nombre de la composición.'
+        required: false
+        example: 'Sinfonía No. 5'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      descripcion:
+        name: descripcion
+        description: 'Descripción de la composición.'
+        required: false
+        example: 'Obra maestra de Beethoven'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      nombre_autor:
+        name: nombre_autor
+        description: 'Nombre del autor.'
+        required: false
+        example: 'Ludwig van Beethoven'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      iframe:
+        name: iframe
+        description: 'URL del iframe de YouTube.'
+        required: false
+        example: 'https://www.youtube.com/embed/abc123'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      files:
+        name: files
+        description: 'Array de nuevos archivos (imágenes, PDF, audio). Máximo 12 archivos.'
+        required: false
+        example:
+          - architecto
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      files_existentes:
+        name: files_existentes
+        description: 'Lista de nombres de archivos existentes a conservar, separados por punto y coma.'
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      nombre: 'Sinfonía No. 5'
+      descripcion: 'Obra maestra de Beethoven'
+      nombre_autor: 'Ludwig van Beethoven'
+      iframe: 'https://www.youtube.com/embed/abc123'
+      files:
+        - architecto
+      files_existentes: architecto
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "success": true,
+            "message": "Composición actualizada correctamente.",
+            "data": {
+              "id": 1,
+              "nombre": "Sinfonía No. 5",
+              "descripcion": "Obra maestra de Beethoven actualizada",
+              "nombre_autor": "Ludwig van Beethoven",
+              "ruta": {
+                "youtube": "https://www.youtube.com/embed/abc123",
+                "files": ["imagen1.jpg", "partitura_nueva.pdf"]
+              },
+              "created_at": "2025-06-10T10:00:00.000000Z",
+              "updated_at": "2025-06-10T11:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "success": false,
+            "error": "Composición no encontrada.",
+            "message": "La composición con el ID 1 no existe."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/composiciones/{id}'
+    metadata:
+      groupName: 'Gestión de Composiciones'
+      groupDescription: |-
+
+        APIs para administrar composiciones musicales
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar composición'
+      description: 'Elimina una composición existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la composición.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Composición eliminada correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "error": "Composición no encontrada.",
+            "message": "La composición con el ID 1 no existe."
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

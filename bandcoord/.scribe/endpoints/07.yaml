@@ -1,0 +1,469 @@
+name: 'Gestión de Préstamos de Instrumentos'
+description: |-
+
+  APIs para gestionar los préstamos de instrumentos
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/prestamos
+    metadata:
+      groupName: 'Gestión de Préstamos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los préstamos de instrumentos
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar préstamos'
+      description: 'Obtiene una lista de todos los préstamos de instrumentos con sus relaciones.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Listado de préstamos obtenido correctamente.",
+            "data": [
+              {
+                "num_serie": "123ABC",
+                "usuario_id": 1,
+                "fecha_prestamo": "2025-06-10",
+                "fecha_devolucion": null,
+                "instrumento": {
+                  "numero_serie": "123ABC",
+                  "nombre": "Guitarra Eléctrica",
+                  "estado": "prestado"
+                },
+                "usuario": {
+                  "id": 1,
+                  "nombre": "Juan Pérez"
+                }
+              }
+            ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "error": "Error al obtener los préstamos.",
+            "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/prestamos
+    metadata:
+      groupName: 'Gestión de Préstamos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los préstamos de instrumentos
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear préstamo'
+      description: 'Crea un nuevo préstamo de instrumento y actualiza el estado del instrumento.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      num_serie:
+        name: num_serie
+        description: 'Número de serie del instrumento.'
+        required: true
+        example: 123ABC
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id:
+        name: usuario_id
+        description: 'ID del usuario que solicita el préstamo.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      fecha_prestamo:
+        name: fecha_prestamo
+        description: 'Fecha del préstamo.'
+        required: true
+        example: '2025-06-10'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      fecha_devolucion:
+        name: fecha_devolucion
+        description: 'opcional Fecha de devolución programada.'
+        required: false
+        example: '2025-06-17'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      num_serie: 123ABC
+      usuario_id: 1
+      fecha_prestamo: '2025-06-10'
+      fecha_devolucion: '2025-06-17'
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+            "message": "Préstamo creado correctamente.",
+            "data": {
+              "num_serie": "123ABC",
+              "usuario_id": 1,
+              "fecha_prestamo": "2025-06-10",
+              "fecha_devolucion": null
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: '{"error": "El instrumento no está disponible para préstamo."}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 400
+        content: '{"error": "Este usuario ya tiene un préstamo activo para este instrumento."}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: '{"error": "Instrumento no encontrado."}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: '{"error": {"num_serie": ["El número de serie es obligatorio."]}}'
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/prestamos/{num_serie}/{usuario_id}'
+    metadata:
+      groupName: 'Gestión de Préstamos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los préstamos de instrumentos
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Mostrar préstamo específico'
+      description: 'Obtiene los detalles de un préstamo específico por número de serie y ID de usuario.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      num_serie:
+        name: num_serie
+        description: 'El número de serie del instrumento.'
+        required: true
+        example: 123ABC
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id:
+        name: usuario_id
+        description: 'El ID del usuario.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      num_serie: 123ABC
+      usuario_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Préstamo obtenido correctamente.",
+            "data": {
+              "num_serie": "123ABC",
+              "usuario_id": 1,
+              "fecha_prestamo": "2025-06-10",
+              "fecha_devolucion": null,
+              "instrumento": {
+                "numero_serie": "123ABC",
+                "nombre": "Guitarra Eléctrica",
+                "estado": "prestado"
+              },
+              "usuario": {
+                "id": 1,
+                "nombre": "Juan Pérez"
+              }
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: '{"error": "Préstamo no encontrado."}'
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "error": "Error al obtener el préstamo.",
+            "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/prestamos/{num_serie}/{usuario_id}'
+    metadata:
+      groupName: 'Gestión de Préstamos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los préstamos de instrumentos
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar préstamo'
+      description: 'Actualiza las fechas de un préstamo existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      num_serie:
+        name: num_serie
+        description: 'Número de serie del instrumento.'
+        required: true
+        example: 123ABC
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id:
+        name: usuario_id
+        description: 'ID del usuario.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      num_serie: 123ABC
+      usuario_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      fecha_prestamo:
+        name: fecha_prestamo
+        description: 'Nueva fecha de préstamo.'
+        required: true
+        example: '2025-06-10'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      fecha_devolucion:
+        name: fecha_devolucion
+        description: 'Nueva fecha de devolución.'
+        required: true
+        example: '2025-06-17'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      fecha_prestamo: '2025-06-10'
+      fecha_devolucion: '2025-06-17'
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Préstamo actualizado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "message": "No se encontró el préstamo para actualizar."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+            "error": {
+              "fecha_prestamo": ["La fecha de préstamo es obligatoria."]
+            }
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/prestamos/{num_serie}/{usuario_id}'
+    metadata:
+      groupName: 'Gestión de Préstamos de Instrumentos'
+      groupDescription: |-
+
+        APIs para gestionar los préstamos de instrumentos
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar préstamo'
+      description: 'Elimina un préstamo existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      num_serie:
+        name: num_serie
+        description: 'Número de serie del instrumento.'
+        required: true
+        example: 123ABC
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      usuario_id:
+        name: usuario_id
+        description: 'ID del usuario.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      num_serie: 123ABC
+      usuario_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+            "message": "Préstamo eliminado correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+            "error": "Préstamo no encontrado para eliminar."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+            "error": "Error al eliminar el préstamo.",
+            "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

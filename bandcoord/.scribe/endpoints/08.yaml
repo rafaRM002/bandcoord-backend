@@ -1,0 +1,498 @@
+name: 'Gestión de Entidades'
+description: |-
+
+  APIs para gestionar entidades en el sistema
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/entidades
+    metadata:
+      groupName: 'Gestión de Entidades'
+      groupDescription: |-
+
+        APIs para gestionar entidades en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Listar entidades'
+      description: 'Obtiene una lista de todas las entidades registradas en el sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Lista de entidades obtenida correctamente.",
+              "data": [
+                  {
+                      "id": 1,
+                      "nombre": "Hermandad Example",
+                      "tipo": "hermandad",
+                      "persona_contacto": "Juan Pérez",
+                      "telefono": "123456789",
+                      "email_contacto": "contacto@hermandad.com",
+                      "created_at": "2025-06-10T12:00:00.000000Z",
+                      "updated_at": "2025-06-10T12:00:00.000000Z"
+                  }
+              ]
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al obtener las entidades.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/entidades
+    metadata:
+      groupName: 'Gestión de Entidades'
+      groupDescription: |-
+
+        APIs para gestionar entidades en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear entidad'
+      description: 'Crea una nueva entidad con los datos proporcionados.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        name: nombre
+        description: 'Nombre de la entidad.'
+        required: true
+        example: 'Hermandad Example'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      tipo:
+        name: tipo
+        description: 'Tipo de entidad (hermandad/ayuntamiento/otro).'
+        required: true
+        example: hermandad
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      persona_contacto:
+        name: persona_contacto
+        description: 'Nombre de la persona de contacto.'
+        required: true
+        example: 'Juan Pérez'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      telefono:
+        name: telefono
+        description: 'Número de teléfono de contacto.'
+        required: true
+        example: '123456789'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email_contacto:
+        name: email_contacto
+        description: 'Email de contacto.'
+        required: true
+        example: contacto@hermandad.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      nombre: 'Hermandad Example'
+      tipo: hermandad
+      persona_contacto: 'Juan Pérez'
+      telefono: '123456789'
+      email_contacto: contacto@hermandad.com
+    fileParameters: []
+    responses:
+      -
+        status: 201
+        content: |-
+          {
+              "message": "Entidad creada correctamente.",
+              "data": {
+                  "id": 1,
+                  "nombre": "Hermandad Example",
+                  "tipo": "hermandad",
+                  "persona_contacto": "Juan Pérez",
+                  "telefono": "123456789",
+                  "email_contacto": "contacto@hermandad.com",
+                  "created_at": "2025-06-10T12:00:00.000000Z",
+                  "updated_at": "2025-06-10T12:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "The given data was invalid.",
+              "errors": {
+                  "nombre": ["El campo nombre es obligatorio."],
+                  "tipo": ["El campo tipo debe ser hermandad, ayuntamiento u otro."]
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al crear la entidad.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/entidades/{id}'
+    metadata:
+      groupName: 'Gestión de Entidades'
+      groupDescription: |-
+
+        APIs para gestionar entidades en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Obtener entidad específica'
+      description: 'Recupera la información de una entidad específica por su ID.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la entidad.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Entidad encontrada correctamente.",
+              "data": {
+                  "id": 1,
+                  "nombre": "Hermandad Example",
+                  "tipo": "hermandad",
+                  "persona_contacto": "Juan Pérez",
+                  "telefono": "123456789",
+                  "email_contacto": "contacto@hermandad.com",
+                  "created_at": "2025-06-10T12:00:00.000000Z",
+                  "updated_at": "2025-06-10T12:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "error": "Entidad no encontrada."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al obtener la entidad.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/entidades/{id}'
+    metadata:
+      groupName: 'Gestión de Entidades'
+      groupDescription: |-
+
+        APIs para gestionar entidades en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Actualizar entidad'
+      description: 'Actualiza la información de una entidad existente.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la entidad a actualizar.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        name: nombre
+        description: 'Nombre de la entidad.'
+        required: false
+        example: 'Hermandad Example'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      tipo:
+        name: tipo
+        description: 'Tipo de entidad (hermandad/ayuntamiento/otro).'
+        required: false
+        example: hermandad
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      persona_contacto:
+        name: persona_contacto
+        description: 'Nombre de la persona de contacto.'
+        required: false
+        example: 'Juan Pérez'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      telefono:
+        name: telefono
+        description: 'Número de teléfono de contacto.'
+        required: false
+        example: '123456789'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+      email_contacto:
+        name: email_contacto
+        description: 'Email de contacto.'
+        required: false
+        example: contacto@hermandad.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      nombre: 'Hermandad Example'
+      tipo: hermandad
+      persona_contacto: 'Juan Pérez'
+      telefono: '123456789'
+      email_contacto: contacto@hermandad.com
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Entidad actualizada correctamente.",
+              "data": {
+                  "id": 1,
+                  "nombre": "Hermandad Example",
+                  "tipo": "hermandad",
+                  "persona_contacto": "Juan Pérez",
+                  "telefono": "123456789",
+                  "email_contacto": "contacto@hermandad.com",
+                  "created_at": "2025-06-10T12:00:00.000000Z",
+                  "updated_at": "2025-06-10T12:00:00.000000Z"
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "error": "Entidad no encontrada."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 422
+        content: |-
+          {
+              "message": "The given data was invalid.",
+              "errors": {
+                  "tipo": ["El campo tipo debe ser hermandad, ayuntamiento u otro."]
+              }
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al actualizar la entidad.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/entidades/{id}'
+    metadata:
+      groupName: 'Gestión de Entidades'
+      groupDescription: |-
+
+        APIs para gestionar entidades en el sistema
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Eliminar entidad'
+      description: 'Elimina una entidad específica del sistema.'
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'El ID de la entidad a eliminar.'
+        required: true
+        example: '1'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        custom: []
+    cleanUrlParameters:
+      id: '1'
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: |-
+          {
+              "message": "Entidad eliminada correctamente."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 404
+        content: |-
+          {
+              "error": "Entidad no encontrada."
+          }
+        headers: []
+        description: ''
+        custom: []
+      -
+        status: 500
+        content: |-
+          {
+              "error": "Error al eliminar la entidad.",
+              "message": "Mensaje de error específico"
+          }
+        headers: []
+        description: ''
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

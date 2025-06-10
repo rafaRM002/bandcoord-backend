@@ -9,9 +9,39 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * @group Gestión de Mínimos por Evento
+ *
+ * APIs para gestionar los mínimos de instrumentos requeridos por evento
+ */
 class MinimoEventoController extends Controller
 {
-    // Listar todos los mínimos de instrumentos por evento
+    /**
+     * Listar Mínimos por Evento
+     *
+     * Obtiene un listado de todos los mínimos de instrumentos requeridos por cada evento.
+     *
+     * @response 200 {
+     *     "message": "Listado de mínimos por evento obtenido correctamente.",
+     *     "data": [{
+     *         "evento_id": 1,
+     *         "instrumento_tipo_id": "GUITARRA",
+     *         "cantidad": 2,
+     *         "evento": {
+     *             "id": 1,
+     *             "nombre": "Concierto Example"
+     *         },
+     *         "tipoInstrumento": {
+     *             "instrumento": "GUITARRA",
+     *             "nombre": "Guitarra"
+     *         }
+     *     }]
+     * }
+     * @response 500 {
+     *     "error": "Error al obtener los mínimos por evento.",
+     *     "message": "Mensaje de error específico"
+     * }
+     */
     public function index()
     {
         try {
@@ -28,7 +58,34 @@ class MinimoEventoController extends Controller
         }
     }
 
-    // Obtener un mínimo de instrumento por evento específico
+    /**
+     * Obtener Mínimo Específico
+     *
+     * Obtiene el detalle de un mínimo de instrumento específico para un evento.
+     *
+     * @urlParam evento_id integer required ID del evento. Example: 1
+     * @urlParam instrumento_tipo_id string required ID del tipo de instrumento. Example: GUITARRA
+     *
+     * @response 200 {
+     *     "message": "Mínimo de instrumento obtenido correctamente.",
+     *     "data": {
+     *         "evento_id": 1,
+     *         "instrumento_tipo_id": "GUITARRA",
+     *         "cantidad": 2,
+     *         "evento": {
+     *             "id": 1,
+     *             "nombre": "Concierto Example"
+     *         },
+     *         "tipoInstrumento": {
+     *             "instrumento": "GUITARRA",
+     *             "nombre": "Guitarra"
+     *         }
+     *     }
+     * }
+     * @response 404 {
+     *     "error": "Mínimo de instrumento no encontrado."
+     * }
+     */
     public function show($evento_id, $instrumento_tipo_id)
     {
         try {
@@ -48,7 +105,31 @@ class MinimoEventoController extends Controller
         }
     }
 
-    // Crear un nuevo mínimo de instrumento para un evento
+    /**
+     * Crear Mínimo por Evento
+     *
+     * Crea un nuevo registro de mínimo de instrumentos requeridos para un evento.
+     *
+     * @bodyParam evento_id integer required ID del evento. Example: 1
+     * @bodyParam instrumento_tipo_id string required ID del tipo de instrumento. Example: GUITARRA
+     * @bodyParam cantidad integer required Cantidad mínima requerida del instrumento. Mínimo: 1. Example: 2
+     *
+     * @response 201 {
+     *     "message": "Mínimo de instrumento creado correctamente.",
+     *     "data": {
+     *         "evento_id": 1,
+     *         "instrumento_tipo_id": "GUITARRA",
+     *         "cantidad": 2
+     *     }
+     * }
+     * @response 422 {
+     *     "error": {
+     *         "evento_id": ["El evento seleccionado no existe."],
+     *         "instrumento_tipo_id": ["El tipo de instrumento ya existe para este evento."],
+     *         "cantidad": ["La cantidad debe ser al menos 1."]
+     *     }
+     * }
+     */
     public function store(Request $request)
     {
         try {
@@ -80,7 +161,27 @@ class MinimoEventoController extends Controller
         }
     }
 
-    // Actualizar un mínimo de instrumento existente
+    /**
+     * Actualizar Mínimo por Evento
+     *
+     * Actualiza la cantidad mínima requerida de un instrumento para un evento específico.
+     *
+     * @urlParam evento_id integer required ID del evento. Example: 1
+     * @urlParam instrumento_tipo_id string required ID del tipo de instrumento. Example: GUITARRA
+     * @bodyParam cantidad integer required Nueva cantidad mínima requerida. Mínimo: 1. Example: 3
+     *
+     * @response {
+     *     "message": "Registro actualizado correctamente."
+     * }
+     * @response 404 {
+     *     "message": "No se encontró el registro para actualizar."
+     * }
+     * @response 422 {
+     *     "error": {
+     *         "cantidad": ["La cantidad debe ser al menos 1."]
+     *     }
+     * }
+     */
     public function update(Request $request, $evento_id, $instrumento_tipo_id)
     {
         try {
@@ -115,7 +216,21 @@ class MinimoEventoController extends Controller
         }
     }
 
-    // Eliminar un mínimo de instrumento para un evento
+    /**
+     * Eliminar Mínimo por Evento
+     *
+     * Elimina un registro de mínimo de instrumentos requeridos para un evento.
+     *
+     * @urlParam evento_id integer required ID del evento. Example: 1
+     * @urlParam instrumento_tipo_id string required ID del tipo de instrumento. Example: GUITARRA
+     *
+     * @response {
+     *     "message": "Registro eliminado correctamente."
+     * }
+     * @response 404 {
+     *     "error": "Registro no encontrado."
+     * }
+     */
     public function destroy($evento_id, $instrumento_tipo_id)
     {
         try {
