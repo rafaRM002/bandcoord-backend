@@ -114,8 +114,11 @@ class InstrumentoController extends Controller
     {
         try {
             // Obtener tipos válidos desde la base de datos
+//            $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
+//                return strtolower(trim($i));
+//            })->toArray();
             $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
-                return strtolower(trim($i));
+                return trim($i);
             })->toArray();
 
             // Agregar 'other' si es válido en tu lógica
