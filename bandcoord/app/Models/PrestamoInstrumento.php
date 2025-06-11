@@ -25,6 +25,20 @@ class PrestamoInstrumento extends Model
 {
     use HasFactory;
 
+    // Indica que no hay clave primaria autoincremental
+    public $incrementing = false;
+
+    // Clave primaria compuesta
+    protected $primaryKey = ['num_serie', 'usuario_id'];/**
+ * Para que Laravel use la clave primaria compuesta en updates
+ */
+    protected function setKeysForSaveQuery($query)
+    {
+        $query->where('num_serie', '=', $this->getAttribute('num_serie'))
+            ->where('usuario_id', '=', $this->getAttribute('usuario_id'));
+        return $query;
+    }
+
     /**
      * Nombre de la tabla en la base de datos
      *

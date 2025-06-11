@@ -145,7 +145,7 @@ class PrestamoInstrumentoController extends Controller
                 'num_serie' => 'required|exists:instrumentos,numero_serie',
                 'usuario_id' => 'required|exists:usuarios,id',
                 'fecha_prestamo' => 'required|date',
-                'fecha_devolucion' => 'nullable|date',  // fecha_devolucion opcional
+                'fecha_devolucion' => 'nullable|date',
             ]);
 
             // Verificar si el instrumento está disponible
@@ -159,33 +159,45 @@ class PrestamoInstrumentoController extends Controller
                 return response()->json(['error' => 'El instrumento no está disponible para préstamo.'], 400);
             }
 
-            // Comprobar si el usuario ya tiene un préstamo activo con el mismo instrumento
-            $existingRecord = PrestamoInstrumento::where('usuario_id', $validated['usuario_id'])
+            // Verificar si el usuario ya tiene un préstamo activo para este instrumento
+            $activeLoan = PrestamoInstrumento::where('usuario_id', $validated['usuario_id'])
                 ->where('num_serie', $validated['num_serie'])
-                ->whereNull('fecha_devolucion')  // Verifica si no ha sido devuelto
+                ->whereNull('fecha_devolucion')
                 ->first();
 
-            if ($existingRecord) {
+            if ($activeLoan) {
                 return response()->json(['error' => 'Este usuario ya tiene un préstamo activo para este instrumento.'], 400);
             }
 
-            // Crea el préstamo
-            $prestamo = PrestamoInstrumento::create([
-                'num_serie' => $validated['num_serie'],
-                'usuario_id' => $validated['usuario_id'],
-                'fecha_prestamo' => $validated['fecha_prestamo'],
-                //Asignar null si no la añadimos
-                'fecha_devolucion' => $validated['fecha_devolucion'] ?? null,
-            ]);
+            // Buscar préstamo previo (aunque devuelto)
+            $prestamo = PrestamoInstrumento::where('num_serie', $validated['num_serie'])
+                ->where('usuario_id', $validated['usuario_id'])
+                ->first();
 
-            // Marcar el instrumento como "prestado"
+            if ($prestamo) {
+                // Actualizar préstamo existente
+                $prestamo->fecha_prestamo = $validated['fecha_prestamo'];
+                $prestamo->fecha_devolucion = $validated['fecha_devolucion'] ?? null;
+                $prestamo->save();
+            } else {
+                // Crear nuevo préstamo
+                $prestamo = PrestamoInstrumento::create([
+                    'num_serie' => $validated['num_serie'],
+                    'usuario_id' => $validated['usuario_id'],
+                    'fecha_prestamo' => $validated['fecha_prestamo'],
+                    'fecha_devolucion' => $validated['fecha_devolucion'] ?? null,
+                ]);
+            }
+
+            // Marcar el instrumento como prestado
             $instrumento->estado = 'prestado';
             $instrumento->save();
 
             return response()->json([
-                'message' => 'Préstamo creado correctamente.',
+                'message' => 'Préstamo registrado correctamente.',
                 'data' => $prestamo
             ], 201);
+
         } catch (ValidationException $e) {
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
@@ -195,6 +207,7 @@ class PrestamoInstrumentoController extends Controller
             ], 500);
         }
     }
+
 
     /**
      * Actualizar préstamo
