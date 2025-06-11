@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Instrumento;
+use App\Models\TipoInstrumento;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -111,7 +113,13 @@ class InstrumentoController extends Controller
     public function store(Request $request)
     {
         try {
-            $tiposPredefinidos = ['Trompeta', 'Fliscorno', 'Trombon', 'Bombardino', 'Tuba', 'Corneta', 'Caja', 'Tambor'];
+            // Obtener tipos válidos desde la base de datos
+            $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
+                return strtolower(trim($i));
+            })->toArray();
+
+            // Agregar 'other' si es válido en tu lógica
+            $tiposPermitidos = array_merge($tiposDesdeDB);
 
             $messages = [
                 'numero_serie.required' => 'El número de serie es obligatorio.',
@@ -119,13 +127,17 @@ class InstrumentoController extends Controller
                 'estado.required' => 'El estado es obligatorio.',
                 'estado.in' => 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.',
                 'instrumento_tipo_id.required' => 'El tipo de instrumento es obligatorio.',
-                'instrumento_tipo_id.in' => 'El tipo de instrumento debe ser uno de los siguientes: ' . implode(', ', $tiposPredefinidos) . ', o "other".',
+                'instrumento_tipo_id.in' => 'El tipo de instrumento debe ser uno de los siguientes: ' . implode(', ', $tiposDesdeDB),
             ];
 
             $validated = $request->validate([
                 'numero_serie' => 'required|unique:instrumentos,numero_serie',
                 'estado' => 'required|in:prestado,disponible,en reparacion',
-                'instrumento_tipo_id' => 'required|string|in:' . implode(',', $tiposPredefinidos) . ',other',
+                'instrumento_tipo_id' => [
+                    'required',
+                    'string',
+                    Rule::in($tiposPermitidos),
+                ],
             ], $messages);
 
             $instrumento = Instrumento::create($validated);
