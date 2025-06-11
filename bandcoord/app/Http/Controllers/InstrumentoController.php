@@ -113,10 +113,6 @@ class InstrumentoController extends Controller
     public function store(Request $request)
     {
         try {
-            // Obtener tipos válidos desde la base de datos
-//            $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
-//                return strtolower(trim($i));
-//            })->toArray();
             $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
                 return trim($i);
             })->toArray();
@@ -192,10 +188,29 @@ class InstrumentoController extends Controller
     public function update(Request $request, $numero_serie)
     {
         try {
+            // Obtener tipos válidos desde la base de datos
+            $tiposDesdeDB = TipoInstrumento::pluck('instrumento')->map(function ($i) {
+                return trim($i);
+            })->toArray();
+
+            // Tipos permitidos
+            $tiposPermitidos = array_merge($tiposDesdeDB);
+
+            $messages = [
+                'estado.required' => 'El estado es obligatorio.',
+                'estado.in' => 'El estado debe ser uno de los siguientes: prestado, disponible, en reparacion.',
+                'instrumento_tipo_id.required' => 'El tipo de instrumento es obligatorio.',
+                'instrumento_tipo_id.in' => 'El tipo de instrumento debe ser uno de los siguientes: ' . implode(', ', $tiposPermitidos),
+            ];
+
             $validated = $request->validate([
                 'estado' => 'required|in:prestado,disponible,en reparacion',
-                'instrumento_tipo_id' => 'required|string|in:Trompeta,Fliscorno,Trombon,Bombardino,Tuba,Corneta,Caja,Tambor,other',
-            ]);
+                'instrumento_tipo_id' => [
+                    'required',
+                    'string',
+                    Rule::in($tiposPermitidos),
+                ],
+            ], $messages);
 
             $instrumento = Instrumento::where('numero_serie', $numero_serie)->first();
 
