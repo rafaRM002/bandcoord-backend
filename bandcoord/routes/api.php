@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('usuarios/{id}', [UsuarioController::class, 'destroy']); // @description Elimina un usuario específico
         Route::patch('usuarios/{id}/approve', [UsuarioController::class, 'approveUser']); // @description Activa un usuario
         Route::patch('usuarios/{id}/block', [UsuarioController::class, 'blockUser']); // @description Bloquea un usuario
+        Route::patch('usuarios/{id}/suspend', [UsuarioController::class, 'suspend']); // @description Suspende un usuario
     });
 
     /**

@@ -150,57 +150,6 @@ class AuthController extends Controller
     }
 
     /**
-     * Aprobar usuario
-     *
-     * Aprueba un usuario pendiente. Solo accesible por administradores.
-     *
-     * @urlParam id required El ID del usuario a aprobar. Example: 1
-     *
-     * @response {
-     *     "message": "Usuario aprobado correctamente.",
-     *     "usuario": {
-     *         "id": 1,
-     *         "nombre": "Juan",
-     *         "estado": "activo",
-     *         ...
-     *     }
-     * }
-     * @response 404 {
-     *     "error": "Usuario no encontrado"
-     * }
-     * @response 400 {
-     *     "error": "Este usuario no está pendiente de aprobación."
-     * }
-     */
-    public function aprobarUsuario($id)
-    {
-        try {
-            $usuario = Usuario::find($id);
-
-            if (!$usuario) {
-                return response()->json(['error' => 'Usuario no encontrado'], 404);
-            }
-
-            if ($usuario->estado !== 'pendiente') {
-                return response()->json(['error' => 'Este usuario no está pendiente de aprobación.'], 400);
-            }
-
-            $usuario->estado = 'activo';
-            $usuario->save();
-
-            return response()->json([
-                'message' => 'Usuario aprobado correctamente.',
-                'usuario' => $usuario
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Hubo un problema al aprobar el usuario.',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
      * Obtener perfil
      *
      * Obtiene la información del perfil del usuario autenticado.

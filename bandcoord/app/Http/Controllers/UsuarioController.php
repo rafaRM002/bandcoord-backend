@@ -336,6 +336,49 @@ class UsuarioController extends Controller
     }
 
     /**
+     * Suspender usuario
+     *
+     * Suspende un usuario pendiente. Solo accesible por administradores.
+     *
+     * @urlParam id required El ID del usuario a suspender. Example: 1
+     *
+     * @response {
+     *     "message": "Usuario suspendido correctamente.",
+     *     "usuario": {
+     *         "id": 1,
+     *         "nombre": "Juan",
+     *         "estado": "suspendido",
+     *         ...
+     *     }
+     * }
+     * @response 404 {
+     *     "error": "Usuario no encontrado"
+     * }
+     * @response 400 {
+     *     "error": "Este al suspender el usuario"
+     * }
+     */
+    public function suspend($id)
+    {
+        try {
+            $usuario = Usuario::findOrFail($id);
+            $usuario->estado = 'suspendido';
+            $usuario->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario suspendido correctamente',
+                'data' => $usuario
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al suspender usuario'
+            ], 500);
+        }
+    }
+
+    /**
      * Eliminar usuario
      *
      * Elimina un usuario del sistema.
